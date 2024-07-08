@@ -1,0 +1,29 @@
+{
+    "project_info": {
+        "project_number": "19864181156",
+        "project_id": "ecopalte",
+        "storage_bucket": "ecopalte.appspot.com"
+    },
+    "client": [
+        {
+            "client_info": {
+                "mobilesdk_app_id": "1:19864181156:android:3fdf8347061da6a37bc931",
+                "android_client_info": {
+                    "package_name": "com.example.ecoplate"
+                }
+            },
+            "oauth_client": [],
+            "api_key": [
+                {
+                    "current_key": "AIzaSyBg_7OAdaRtZ_EIzskzCSwJbJnlcp8dLTo"
+                }
+            ],
+            "services": {
+                "appinvite_service": {
+                    "other_platform_oauth_client": []
+                }
+            }
+        }
+    ],
+    "configuration_version": "1"
+}
