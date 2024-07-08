@@ -1,5 +1,6 @@
 import 'package:ecoplate/app/dashboard/view/dashboard_view.dart';
 import 'package:ecoplate/app/purcheses/view/purcheses_view.dart';
+import 'package:ecoplate/app/security_cameras/view/detect_food_waste_view.dart';
 import 'package:ecoplate/app/sidebar/view/sidebar_view.dart';
 import 'package:ecoplate/app/stock/view/stock_view.dart';
 import 'package:ecoplate/core/components/eco_plate_appbar.dart';
@@ -71,24 +72,42 @@ class _HomeViewState extends State<HomeView> {
               IconButtonWithTitle(
                 icon: Icons.dashboard,
                 title: "Dashboard",
-                onTap: () => _handleNavigation('/dashboard'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const DashboardView()),
+                  );
+                },
               ),
               IconButtonWithTitle(
                 icon: Icons.no_food,
                 title: "Detect Food Waste",
                 onTap: () {
-                  // Navigate to DetectFoodWasteView
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const DetectFoodWasteView()),
+                  );
                 },
               ),
               IconButtonWithTitle(
                 icon: Icons.store,
                 title: "Stock",
-                onTap: () => _handleNavigation('/stock'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const StockView()),
+                  );
+                },
               ),
               IconButtonWithTitle(
                 icon: Icons.qr_code_2,
                 title: "Scan Purchases",
-                onTap: () => _handleNavigation('/purchases'),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const PurchesesView()),
+                  );
+                },
               ),
             ],
           ),
