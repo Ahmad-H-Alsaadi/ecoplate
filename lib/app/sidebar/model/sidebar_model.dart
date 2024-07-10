@@ -1,3 +1,4 @@
+import 'package:ecoplate/core/constants/icon_constants.dart';
 import 'package:flutter/material.dart';
 
 class SidebarModel {
@@ -15,27 +16,52 @@ class SidebarModel {
 class SidebarData {
   static final List<SidebarModel> items = [
     SidebarModel(
-      icon: Icons.manage_accounts_outlined,
+      icon: IconConstants.kHome,
       title: 'Home',
       routeName: '/home',
     ),
     SidebarModel(
-      icon: Icons.favorite,
+      icon: IconConstants.kDashboard,
       title: 'Dashboard',
       routeName: '/dashboard',
     ),
     SidebarModel(
-      icon: Icons.history,
+      icon: IconConstants.kPurchases,
       title: 'Purchases',
       routeName: '/purchases',
     ),
     SidebarModel(
-      icon: Icons.textsms_outlined,
+      icon: IconConstants.kItems,
+      title: 'Items',
+      routeName: '/items',
+    ),
+    SidebarModel(
+      icon: IconConstants.kProducts,
+      title: 'Products',
+      routeName: '/products',
+    ),
+    SidebarModel(
+      icon: IconConstants.kFoodServer,
+      title: 'Food Server',
+      routeName: '/food_server',
+    ),
+    SidebarModel(
+      icon: IconConstants.kWallet,
+      title: 'Wallet',
+      routeName: '/wallet',
+    ),
+    SidebarModel(
+      icon: IconConstants.kStock,
       title: 'Stock',
       routeName: '/stock',
     ),
     SidebarModel(
-      icon: Icons.exit_to_app_rounded,
+      icon: IconConstants.kDetectFoodWaste,
+      title: 'Detect Food Waste',
+      routeName: '/detect_food_waste',
+    ),
+    SidebarModel(
+      icon: IconConstants.kLogout,
       title: 'Log out',
       routeName: '/logout',
     ),

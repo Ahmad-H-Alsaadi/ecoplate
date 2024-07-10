@@ -1,3 +1,4 @@
+import 'package:ecoplate/app/account/view/account_view.dart';
 import 'package:ecoplate/core/constants/assets.dart';
 import 'package:ecoplate/core/constants/color_constants.dart';
 import 'package:ecoplate/core/constants/decorations.dart';
@@ -17,7 +18,7 @@ class EcoPlateAppbar extends StatelessWidget implements PreferredSizeWidget {
         child: IconButton(
           icon: const Icon(Icons.menu, color: ColorConstants.kPrimaryColor, size: 40),
           onPressed: () {
-            // Implement menu functionality
+            Scaffold.of(context).openDrawer();
           },
         ),
       ),
@@ -37,7 +38,10 @@ class EcoPlateAppbar extends StatelessWidget implements PreferredSizeWidget {
               size: 40,
             ),
             onPressed: () {
-              // Implement profile functionality
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AccountView()),
+              );
             },
           ),
         ),
