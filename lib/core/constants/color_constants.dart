@@ -7,4 +7,5 @@ class ColorConstants {
   static const Color kLogoColor = Color(0xFF0E2338);
   static const Color kPrimaryColor = Color(0xFF0E2338);
   static const Color kBlack = Color.fromARGB(255, 0, 0, 0);
+  static const Color kWhite = Color.fromARGB(255, 255, 255, 255);
 }
