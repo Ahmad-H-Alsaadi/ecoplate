@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class IconConstants {
   static const IconData kHome = Icons.home_rounded;
-  static const IconData kDashboard = Icons.search_rounded;
+  static const IconData kDashboard = Icons.dashboard_rounded;
   static const IconData kProfile = Icons.person_rounded;
   static const IconData kSettings = Icons.settings_rounded;
   static const IconData kLogout = Icons.logout_rounded;
