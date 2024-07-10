@@ -1,53 +1,19 @@
-import 'package:ecoplate/app/dashboard/view/dashboard_view.dart';
-import 'package:ecoplate/app/purcheses/view/purcheses_view.dart';
-import 'package:ecoplate/app/security_cameras/view/detect_food_waste_view.dart';
+import 'package:ecoplate/app/home/controller/home_controller.dart';
 import 'package:ecoplate/app/sidebar/view/sidebar_view.dart';
-import 'package:ecoplate/app/stock/view/stock_view.dart';
 import 'package:ecoplate/core/components/eco_plate_appbar.dart';
 import 'package:ecoplate/core/components/icon_button_with_title.dart';
 import 'package:ecoplate/core/constants/color_constants.dart';
 import 'package:flutter/material.dart';
 
 class HomeView extends StatefulWidget {
-  HomeView({Key? key}) : super(key: key);
+  const HomeView({Key? key}) : super(key: key);
 
   @override
   _HomeViewState createState() => _HomeViewState();
 }
 
 class _HomeViewState extends State<HomeView> {
-  void _handleNavigation(String routeName) {
-    Navigator.pop(context); // Close the drawer
-    switch (routeName) {
-      case '/home':
-        // Already on home, do nothing or refresh
-        break;
-      case '/dashboard':
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => DashboardView()),
-        );
-        break;
-      case '/purchases':
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => PurchesesView()),
-        );
-        break;
-      case '/stock':
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => StockView()),
-        );
-        break;
-      // Add other routes as needed
-    }
-  }
-
-  void _handleLogout() {
-    // Implement your logout logic here
-    print('Logging out...');
-  }
+  final HomeController _controller = HomeController();
 
   @override
   Widget build(BuildContext context) {
@@ -55,8 +21,7 @@ class _HomeViewState extends State<HomeView> {
       backgroundColor: ColorConstants.kBackgroundColor,
       appBar: const EcoPlateAppbar(),
       drawer: SidebarView(
-        onItemTap: _handleNavigation,
-        onLogout: _handleLogout,
+        onItemTap: (routeName) => _controller.handleNavigation(context, routeName),
       ),
       body: Center(
         child: SizedBox(
@@ -68,48 +33,16 @@ class _HomeViewState extends State<HomeView> {
             crossAxisSpacing: 20,
             mainAxisSpacing: 20,
             childAspectRatio: 1.0,
-            children: <Widget>[
-              IconButtonWithTitle(
-                icon: Icons.dashboard,
-                title: "Dashboard",
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const DashboardView()),
-                  );
-                },
-              ),
-              IconButtonWithTitle(
-                icon: Icons.no_food,
-                title: "Detect Food Waste",
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const DetectFoodWasteView()),
-                  );
-                },
-              ),
-              IconButtonWithTitle(
-                icon: Icons.store,
-                title: "Stock",
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const StockView()),
-                  );
-                },
-              ),
-              IconButtonWithTitle(
-                icon: Icons.qr_code_2,
-                title: "Scan Purchases",
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const PurchesesView()),
-                  );
-                },
-              ),
-            ],
+            children: _controller
+                .getGridItems()
+                .map(
+                  (item) => IconButtonWithTitle(
+                    icon: item.icon,
+                    title: item.title,
+                    onTap: () => _controller.handleNavigation(context, item.route),
+                  ),
+                )
+                .toList(),
           ),
         ),
       ),
