@@ -1,18 +1,20 @@
-import 'package:ecoplate/app/account/view/account_view.dart';
-import 'package:ecoplate/core/constants/assets.dart';
 import 'package:ecoplate/core/constants/color_constants.dart';
 import 'package:ecoplate/core/constants/decorations.dart';
+import 'package:ecoplate/core/controllers/navigation_controller.dart';
 import 'package:flutter/material.dart';
 
 class EcoPlateAppbar extends StatelessWidget implements PreferredSizeWidget {
-  const EcoPlateAppbar({Key? key}) : super(key: key);
+  final String? imagePath;
+  final NavigationController navigationController;
+
+  const EcoPlateAppbar({Key? key, this.imagePath, required this.navigationController}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      elevation: 0, // Removes shadow for a more modern look
+      elevation: 0,
       backgroundColor: ColorConstants.kBackgroundColor,
-      leadingWidth: 80, // Gives more space for the menu icon
+      leadingWidth: 80,
       leading: Padding(
         padding: const EdgeInsets.only(left: 16.0),
         child: IconButton(
@@ -22,11 +24,13 @@ class EcoPlateAppbar extends StatelessWidget implements PreferredSizeWidget {
           },
         ),
       ),
-      title: Image.asset(
-        Assets.kEcoPlate,
-        height: LogoConstants.logoHeight / 2.5,
-        fit: BoxFit.contain,
-      ),
+      title: imagePath != null
+          ? Image.asset(
+              imagePath!,
+              height: LogoConstants.logoHeight / 2.5,
+              fit: BoxFit.contain,
+            )
+          : null,
       centerTitle: true,
       actions: [
         Padding(
@@ -38,21 +42,11 @@ class EcoPlateAppbar extends StatelessWidget implements PreferredSizeWidget {
               size: 40,
             ),
             onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => const AccountView()),
-              );
+              navigationController.navigateTo('/account');
             },
           ),
         ),
       ],
-      bottom: PreferredSize(
-        preferredSize: const Size.fromHeight(1.0),
-        child: Container(
-          color: Colors.grey.withOpacity(0.2),
-          height: 1.0,
-        ),
-      ),
     );
   }
 

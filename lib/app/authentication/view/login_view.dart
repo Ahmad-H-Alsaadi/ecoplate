@@ -5,11 +5,13 @@ import 'package:ecoplate/core/components/error_massage.dart';
 import 'package:ecoplate/core/constants/assets.dart';
 import 'package:ecoplate/core/constants/color_constants.dart';
 import 'package:ecoplate/core/constants/decorations.dart';
+import 'package:ecoplate/core/controllers/navigation_controller.dart';
 import 'package:flutter/material.dart';
 
 class LoginView extends StatefulWidget {
   final Function()? onTap;
-  const LoginView({super.key, required this.onTap});
+  final NavigationController navigationController;
+  const LoginView({super.key, required this.onTap, required this.navigationController});
 
   @override
   State<LoginView> createState() => _LoginViewState();
@@ -71,7 +73,11 @@ class _LoginViewState extends State<LoginView> {
                 const SizedBox(height: 20),
                 AppButton(
                   onTap: () async {
-                    await _loginController.signInUser(context, setState);
+                    await _loginController.signInUser(
+                      context,
+                      setState,
+                      widget.navigationController,
+                    );
                   },
                   sign: "Sign In",
                 ),

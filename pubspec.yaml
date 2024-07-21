@@ -37,19 +37,30 @@ dependencies:
     firebase_core: ^2.27.0
     firebase_auth: ^4.17.8
     cloud_firestore: ^4.15.8
-    freezed: ^2.5.2
     freezed_annotation: ^2.4.1
     http: ^1.2.1
     video_player: ^2.9.1
     flutter_vlc_player: ^7.4.2
     permission_handler: ^11.3.1
     camera: ^0.11.0+1
+    get_it: ^7.7.0
+    mobile_scanner: ^5.1.1
+    flutter_launcher_icons: ^0.13.1
+    provider: ^6.1.2
+    intl: ^0.19.0
+
+flutter_launcher_icons:
+    android: "launcher_icon"
+    ios: true
+    image_path: "assets/images/icon.png"
 
 dev_dependencies:
     flutter_test:
         sdk: flutter
-    flutter_launcher_icons: "^0.13.1"
     flutter_lints: ^2.0.0
+    freezed: ^2.5.2
+    build_runner: ^2.4.11
+    json_serializable: ^6.8.0
 
 flutter_icons:
     android: "launcher_icon"
@@ -69,6 +80,19 @@ flutter:
     assets:
         - assets/images/ecoplate.png
         - assets/images/icon.png
+        - assets/images/dashboard.png
+        - assets/images/account.png
+        - assets/images/food_server.png
+        - assets/images/home.png
+        - assets/images/items.png
+        - assets/images/products.png
+        - assets/images/purchases.png
+        - assets/images/detect_waste.png
+        - assets/images/stock.png
+        - assets/images/wallet.png
+        - assets/images/qr_scanner.png
+        - assets/images/camera.png
+        - assets/images/security_cameras.png
 
     # An image asset can refer to one or more resolution-specific "variants", see
     # https://flutter.dev/assets-and-images/#resolution-aware

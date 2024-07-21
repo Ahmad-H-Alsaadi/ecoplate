@@ -1,18 +1,25 @@
+import 'package:ecoplate/app/dashboard/controller/dashboard_controller.dart';
+import 'package:ecoplate/core/constants/assets.dart';
+import 'package:ecoplate/core/controllers/navigation_controller.dart';
+import 'package:ecoplate/core/views/base_view.dart';
 import 'package:flutter/material.dart';
 
-class DashboardView extends StatefulWidget {
-  const DashboardView({super.key});
+class DashboardView extends StatelessWidget {
+  final NavigationController navigationController;
+  late final DashboardController controller;
 
-  @override
-  State<DashboardView> createState() => _DashboardViewState();
-}
+  DashboardView({Key? key, required this.navigationController}) : super(key: key) {
+    controller = DashboardController(navigationController);
+  }
 
-class _DashboardViewState extends State<DashboardView> {
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(
-        child: Text("DashBoard"),
+    return BaseView(
+      title: 'Dashboard',
+      imagePath: Assets.kDashBoard, // Assuming you have a dashboard icon
+      navigationController: navigationController,
+      body: const Center(
+        child: Text("Dashboard"),
       ),
     );
   }

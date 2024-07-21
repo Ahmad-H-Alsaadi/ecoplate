@@ -5,12 +5,14 @@ import 'package:ecoplate/core/components/error_massage.dart';
 import 'package:ecoplate/core/constants/assets.dart';
 import 'package:ecoplate/core/constants/color_constants.dart';
 import 'package:ecoplate/core/constants/decorations.dart';
+import 'package:ecoplate/core/controllers/navigation_controller.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
 class RegisterView extends StatefulWidget {
   final Function()? onTap;
-  const RegisterView({super.key, required this.onTap});
+  final NavigationController navigationController;
+  const RegisterView({super.key, required this.onTap, required this.navigationController});
 
   @override
   State<RegisterView> createState() => _RegisterViewState();
@@ -81,7 +83,11 @@ class _RegisterViewState extends State<RegisterView> {
               const SizedBox(height: 20),
               AppButton(
                 onTap: () async {
-                  await _registerController.signUpUser(context);
+                  await _registerController.signUpUser(
+                    context,
+                    setState,
+                    widget.navigationController, // Add this line
+                  );
                 },
                 sign: "Sign Up",
               ),
