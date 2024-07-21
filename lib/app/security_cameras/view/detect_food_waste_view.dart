@@ -1,40 +1,43 @@
-import 'package:camera/camera.dart';
-import 'package:ecoplate/app/security_cameras/view/camera_view.dart';
-import 'package:ecoplate/app/security_cameras/view/security_cameras_view.dart';
-import 'package:ecoplate/core/components/eco_plate_appbar.dart';
+// lib/app/security_cameras/view/detect_food_waste_view.dart
+
+import 'package:ecoplate/app/security_cameras/controller/detect_food_waste_controller.dart';
 import 'package:ecoplate/core/components/icon_button_with_title.dart';
-import 'package:ecoplate/core/constants/color_constants.dart';
+import 'package:ecoplate/core/constants/assets.dart';
 import 'package:ecoplate/core/constants/decorations.dart';
+import 'package:ecoplate/core/controllers/navigation_controller.dart';
+import 'package:ecoplate/core/views/base_view.dart';
 import 'package:flutter/material.dart';
 
 class DetectFoodWasteView extends StatefulWidget {
-  const DetectFoodWasteView({super.key});
+  final NavigationController navigationController;
+
+  const DetectFoodWasteView({Key? key, required this.navigationController}) : super(key: key);
 
   @override
   State<DetectFoodWasteView> createState() => _DetectFoodWasteViewState();
 }
 
 class _DetectFoodWasteViewState extends State<DetectFoodWasteView> {
-  late CameraController _controller;
-  List<CameraDescription>? cameras;
+  late DetectFoodWasteController controller;
 
   @override
   void initState() {
     super.initState();
-    _initCameras();
+    controller = DetectFoodWasteController(widget.navigationController);
+    _initCamera();
   }
 
-  Future<void> _initCameras() async {
-    cameras = await availableCameras();
-    _controller = CameraController(cameras![0], ResolutionPreset.medium);
-    await _controller.initialize();
+  Future<void> _initCamera() async {
+    await controller.initCameras();
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: ColorConstants.kBackgroundColor,
-      appBar: const EcoPlateAppbar(),
+    return BaseView(
+      title: 'Detect Food Waste',
+      imagePath: Assets.kDetectWaste,
+      navigationController: widget.navigationController,
       body: Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -42,23 +45,13 @@ class _DetectFoodWasteViewState extends State<DetectFoodWasteView> {
             IconButtonWithTitle(
               icon: Icons.videocam,
               title: "Security Camera",
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const SecurityCamerasView()),
-                );
-              },
+              onTap: () => controller.navigateToSecurityCameras(context),
             ),
-            const SizedBox(
-              width: Sizes.largeSize,
-            ),
+            const SizedBox(width: Sizes.largeSize),
             IconButtonWithTitle(
               icon: Icons.camera_alt,
               title: "Phone Camera",
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => CameraView(controller: _controller)),
-              ),
+              onTap: () => controller.navigateToPhoneCamera(context),
             ),
           ],
         ),
@@ -68,7 +61,7 @@ class _DetectFoodWasteViewState extends State<DetectFoodWasteView> {
 
   @override
   void dispose() {
-    _controller.dispose();
+    controller.dispose();
     super.dispose();
   }
 }
