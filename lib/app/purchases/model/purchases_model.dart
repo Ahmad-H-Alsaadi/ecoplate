@@ -25,11 +25,11 @@ class PurchasesModel with _$PurchasesModel {
     final data = doc.data() as Map<String, dynamic>;
     return PurchasesModel(
       id: doc.id,
-      sellerName: data['sellerName'] as String,
-      vatNumber: data['vatNumber'] as String,
-      dateTime: (data['dateTime'] as Timestamp).toDate(),
-      totalAmount: (data['totalAmount'] as num).toDouble(),
-      vatAmount: (data['vatAmount'] as num).toDouble(),
+      sellerName: data['seller_name'] as String,
+      vatNumber: data['vat_number'] as String,
+      dateTime: (data['timestamp'] as Timestamp).toDate(),
+      totalAmount: (data['total_amount'] as num).toDouble(),
+      vatAmount: (data['vat_amount'] as num).toDouble(),
       items: (data['items'] as List<dynamic>).map((item) => StockModel.fromJson(item as Map<String, dynamic>)).toList(),
     );
   }
