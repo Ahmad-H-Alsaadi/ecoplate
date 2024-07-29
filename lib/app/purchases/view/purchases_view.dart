@@ -5,6 +5,8 @@ import 'package:ecoplate/app/stock/model/stock_model.dart';
 import 'package:ecoplate/core/components/add_item_form.dart';
 import 'package:ecoplate/core/components/item_card.dart';
 import 'package:ecoplate/core/constants/assets.dart';
+import 'package:ecoplate/core/constants/color_constants.dart';
+import 'package:ecoplate/core/constants/decorations.dart';
 import 'package:ecoplate/core/controllers/navigation_controller.dart';
 import 'package:ecoplate/core/views/base_view.dart';
 import 'package:flutter/material.dart';
@@ -40,9 +42,7 @@ class _PurchasesViewState extends State<PurchasesView> {
       savedItems = await controller.getSavedItems();
       setState(() {});
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error loading saved items: $e')),
-      );
+      _showSnackBar('Error loading saved items: $e', isError: true);
     }
   }
 
@@ -57,82 +57,103 @@ class _PurchasesViewState extends State<PurchasesView> {
           Expanded(
             child: ListView(
               children: [
-                Card(
-                  margin: const EdgeInsets.all(8.0),
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          'Scanned Data',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        ...widget.decodedData.entries.map((entry) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 4.0),
-                            child: Text('${entry.key}: ${entry.value}'),
-                          );
-                        }),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 16.0),
-                  child: Text(
-                    'Added Items',
-                    style: TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-                ElevatedButton(
-                  onPressed: _showAddExistingItemDialog,
-                  child: const Text('Add Existing Item'),
-                ),
-                ...items.map((item) => ItemCard(
-                      item: item,
-                      onDelete: () => _removeItem(item),
-                    )),
+                _buildScannedDataCard(),
+                SizedBox(height: Sizes.mediumSize),
+                _buildAddedItemsSection(),
               ],
             ),
           ),
           AddItemForm(onAddItem: _addNewItem),
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: _savePurchase,
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                    ),
-                    child: const Text('Save Purchase'),
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () => controller.navigateTo('/qr_code_scanner'),
-                    style: ElevatedButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(vertical: 12),
-                    ),
-                    child: const Text('Scan Another QR Code'),
-                  ),
-                ),
-              ],
-            ),
+          _buildActionButtons(),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildScannedDataCard() {
+    return Card(
+      margin: Insets.mediumPadding,
+      shape: RoundedRectangleBorder(borderRadius: Borders.mediumBorderRadius),
+      elevation: 4,
+      child: Padding(
+        padding: Insets.mediumPadding,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Scanned Data', style: TextStyles.heading2),
+            SizedBox(height: Sizes.smallSize),
+            ...widget.decodedData.entries.map((entry) {
+              return Padding(
+                padding: Insets.smallPadding,
+                child: Text('${entry.key}: ${entry.value}', style: TextStyles.bodyText1),
+              );
+            }),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAddedItemsSection() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Padding(
+          padding: Insets.mediumPadding,
+          child: Text('Added Items', style: TextStyles.heading2),
+        ),
+        _buildAddExistingItemButton(),
+        ...items.map((item) => ItemCard(
+              item: item,
+              onDelete: () => _removeItem(item),
+            )),
+      ],
+    );
+  }
+
+  Widget _buildAddExistingItemButton() {
+    return Padding(
+      padding: Insets.mediumPadding,
+      child: ElevatedButton.icon(
+        onPressed: _showAddExistingItemDialog,
+        icon: Icon(Icons.add, color: ColorConstants.kWhite),
+        label: Text('Add Existing Item', style: TextStyles.buttonText),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: ColorConstants.kPrimaryColor,
+          padding: Insets.symmetricPadding,
+          shape: RoundedRectangleBorder(borderRadius: Borders.smallBorderRadius),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActionButtons() {
+    return Padding(
+      padding: Insets.mediumPadding,
+      child: Row(
+        children: [
+          Expanded(
+            child: _buildActionButton('Save Purchase', _savePurchase, ColorConstants.kAccentColor),
+          ),
+          SizedBox(width: Sizes.mediumSize),
+          Expanded(
+            child: _buildActionButton(
+                'Scan Another QR Code', () => controller.navigateTo('/qr_code_scanner'), ColorConstants.kPrimaryColor),
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildActionButton(String text, VoidCallback onPressed, Color color) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: color,
+        padding: Insets.symmetricPadding,
+        shape: RoundedRectangleBorder(borderRadius: Borders.smallBorderRadius),
+      ),
+      child: Text(text, style: TextStyles.buttonText),
     );
   }
 
@@ -143,17 +164,17 @@ class _PurchasesViewState extends State<PurchasesView> {
         ItemsModel? selectedItem;
         double amount = 0;
         return AlertDialog(
-          title: const Text('Add Existing Item'),
+          title: Text('Add Existing Item', style: TextStyles.heading2),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               DropdownButton<ItemsModel>(
-                hint: const Text('Select an item'),
+                hint: Text('Select an item', style: TextStyles.bodyText1),
                 value: selectedItem,
                 items: savedItems.map((ItemsModel item) {
                   return DropdownMenuItem<ItemsModel>(
                     value: item,
-                    child: Text(item.itemName),
+                    child: Text(item.itemName, style: TextStyles.bodyText1),
                   );
                 }).toList(),
                 onChanged: (ItemsModel? value) {
@@ -162,8 +183,13 @@ class _PurchasesViewState extends State<PurchasesView> {
                   });
                 },
               ),
+              SizedBox(height: Sizes.smallSize),
               TextField(
-                decoration: const InputDecoration(labelText: 'Amount'),
+                decoration: InputDecoration(
+                  labelText: 'Amount',
+                  border: OutlineInputBorder(borderRadius: Borders.smallBorderRadius),
+                ),
+                style: TextStyles.bodyText1,
                 keyboardType: TextInputType.number,
                 onChanged: (value) {
                   amount = double.tryParse(value) ?? 0;
@@ -173,11 +199,15 @@ class _PurchasesViewState extends State<PurchasesView> {
           ),
           actions: [
             TextButton(
-              child: const Text('Cancel'),
+              child: Text('Cancel', style: TextStyles.bodyText1.copyWith(color: ColorConstants.kErrorColor)),
               onPressed: () => Navigator.of(context).pop(),
             ),
-            TextButton(
-              child: const Text('Add'),
+            ElevatedButton(
+              child: Text('Add', style: TextStyles.buttonText),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: ColorConstants.kPrimaryColor,
+                shape: RoundedRectangleBorder(borderRadius: Borders.smallBorderRadius),
+              ),
               onPressed: () {
                 if (selectedItem != null && amount > 0) {
                   _addItem(StockModel(
@@ -202,9 +232,7 @@ class _PurchasesViewState extends State<PurchasesView> {
       _addItem(item);
       await _loadSavedItems(); // Refresh the saved items list
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error adding new item: $e')),
-      );
+      _showSnackBar('Error adding new item: $e', isError: true);
     }
   }
 
@@ -233,16 +261,23 @@ class _PurchasesViewState extends State<PurchasesView> {
       );
 
       await controller.savePurchase(purchaseModel);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Purchase saved successfully')),
-      );
+      _showSnackBar('Purchase saved successfully');
       setState(() {
         items.clear();
       });
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error saving purchase: $e')),
-      );
+      _showSnackBar('Error saving purchase: $e', isError: true);
     }
+  }
+
+  void _showSnackBar(String message, {bool isError = false}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message, style: TextStyles.bodyText2.copyWith(color: ColorConstants.kWhite)),
+        backgroundColor: isError ? ColorConstants.kErrorColor : ColorConstants.kAccentColor,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: Borders.smallBorderRadius),
+      ),
+    );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:ecoplate/app/account/controller/account_controller.dart';
 import 'package:ecoplate/core/constants/color_constants.dart';
+import 'package:ecoplate/core/constants/decorations.dart';
 import 'package:ecoplate/core/controllers/navigation_controller.dart';
 import 'package:ecoplate/core/views/base_view.dart';
 import 'package:flutter/material.dart';
@@ -21,55 +22,79 @@ class AccountView extends StatelessWidget {
             imagePath: 'assets/images/account_icon.png',
             navigationController: navigationController,
             body: controller.isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        TextFormField(
-                          controller: controller.nameController,
-                          decoration: const InputDecoration(labelText: 'Name'),
-                        ),
-                        TextFormField(
-                          controller: controller.emailController,
-                          decoration: const InputDecoration(labelText: 'Email'),
-                        ),
-                        TextFormField(
-                          controller: controller.passwordController,
-                          decoration: const InputDecoration(labelText: 'New Password'),
-                          obscureText: true,
-                        ),
-                        const SizedBox(height: 20),
-                        ElevatedButton(
-                          onPressed: () async {
+                ? const Center(child: CircularProgressIndicator(color: ColorConstants.kPrimaryColor))
+                : SingleChildScrollView(
+                    child: Padding(
+                      padding: Insets.largePadding,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          _buildTextField(controller.nameController, 'Name', Icons.person),
+                          SizedBox(height: Sizes.mediumSize),
+                          _buildTextField(controller.emailController, 'Email', Icons.email),
+                          SizedBox(height: Sizes.mediumSize),
+                          _buildTextField(controller.passwordController, 'New Password', Icons.lock, isPassword: true),
+                          SizedBox(height: Sizes.largeSize),
+                          _buildButton('Save Changes', ColorConstants.kAccentColor, () async {
                             String message = await controller.saveChanges();
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
-                          },
-                          child: const Text('Save Changes'),
-                        ),
-                        const SizedBox(height: 10),
-                        ElevatedButton(
-                          onPressed: () async {
+                            _showSnackBar(context, message);
+                          }),
+                          SizedBox(height: Sizes.smallSize),
+                          _buildButton('Update Password', ColorConstants.kPrimaryColor, () async {
                             String message = await controller.updatePassword();
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message)));
-                          },
-                          child: const Text('Update Password'),
-                        ),
-                        const SizedBox(height: 20),
-                        ElevatedButton(
-                          onPressed: () async {
+                            _showSnackBar(context, message);
+                          }),
+                          SizedBox(height: Sizes.largeSize),
+                          _buildButton('Sign Out', ColorConstants.kErrorColor, () async {
                             await controller.signOut();
                             navigationController.navigateTo('/login');
-                          },
-                          style: ElevatedButton.styleFrom(backgroundColor: ColorConstants.kPrimaryColor),
-                          child: const Text('Sign Out'),
-                        ),
-                      ],
+                          }),
+                        ],
+                      ),
                     ),
                   ),
           );
         },
+      ),
+    );
+  }
+
+  Widget _buildTextField(TextEditingController controller, String label, IconData icon, {bool isPassword = false}) {
+    return Container(
+      decoration: Styles.containerDecoration,
+      child: TextFormField(
+        controller: controller,
+        decoration: InputDecoration(
+          labelText: label,
+          prefixIcon: Icon(icon, color: ColorConstants.kPrimaryColor),
+          border: InputBorder.none,
+          contentPadding: Insets.symmetricPadding,
+        ),
+        obscureText: isPassword,
+        style: TextStyles.bodyText1,
+      ),
+    );
+  }
+
+  Widget _buildButton(String text, Color color, VoidCallback onPressed) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: color,
+        padding: Insets.symmetricPadding,
+        shape: RoundedRectangleBorder(borderRadius: Borders.smallBorderRadius),
+      ),
+      child: Text(text, style: TextStyles.buttonText),
+    );
+  }
+
+  void _showSnackBar(BuildContext context, String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message, style: TextStyles.bodyText2.copyWith(color: ColorConstants.kWhite)),
+        backgroundColor: ColorConstants.kPrimaryColor,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: Borders.smallBorderRadius),
       ),
     );
   }

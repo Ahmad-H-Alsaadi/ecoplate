@@ -1,7 +1,8 @@
 import 'package:ecoplate/app/food_server/controller/food_server_controller.dart';
-import 'package:ecoplate/app/food_server/model/food_server_model.dart';
 import 'package:ecoplate/app/products/model/products_model.dart';
 import 'package:ecoplate/core/constants/assets.dart';
+import 'package:ecoplate/core/constants/color_constants.dart';
+import 'package:ecoplate/core/constants/decorations.dart';
 import 'package:ecoplate/core/controllers/navigation_controller.dart';
 import 'package:ecoplate/core/views/base_view.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ class FoodServerView extends StatefulWidget {
 class _FoodServerViewState extends State<FoodServerView> {
   late final FoodServerController controller;
   final Map<String, int> selections = {};
+  List<ProductsModel> allProducts = [];
 
   @override
   void initState() {
@@ -35,21 +37,22 @@ class _FoodServerViewState extends State<FoodServerView> {
           stream: controller.getAllProducts(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              return Center(child: Text('Error: ${snapshot.error}'));
+              return Center(child: Text('Error: ${snapshot.error}', style: TextStyles.bodyText1));
             }
 
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
+              return Center(child: CircularProgressIndicator(color: ColorConstants.kPrimaryColor));
             }
 
             if (!snapshot.hasData || snapshot.data!.isEmpty) {
-              return const Center(child: Text('No products found'));
+              return Center(child: Text('No products found', style: TextStyles.bodyText1));
             }
 
+            allProducts = snapshot.data!;
             return ListView.builder(
-              itemCount: snapshot.data!.length,
+              itemCount: allProducts.length,
               itemBuilder: (context, index) {
-                final product = snapshot.data![index];
+                final product = allProducts[index];
                 return DisplayProduct(
                   product: product,
                   quantity: selections[product.productName] ?? 0,
@@ -66,37 +69,43 @@ class _FoodServerViewState extends State<FoodServerView> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _saveOrder,
-        child: const Icon(Icons.save),
+        child: const Icon(Icons.save, color: ColorConstants.kWhite),
+        backgroundColor: ColorConstants.kPrimaryColor,
       ),
     );
   }
 
   void _saveOrder() async {
     try {
-      List<FoodServerSelection> orderSelections = selections.entries
+      List<ProductsModel> orderSelections = selections.entries
           .where((entry) => entry.value > 0)
-          .map((entry) => FoodServerSelection(productId: entry.key, quantity: entry.value))
+          .map((entry) => allProducts.firstWhere((product) => product.productName == entry.key))
           .toList();
 
       if (orderSelections.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please select at least one product')),
-        );
+        _showSnackBar('Please select at least one product', isError: true);
         return;
       }
 
-      await controller.saveOrder(orderSelections);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Order saved successfully')),
-      );
+      await controller.saveOrder(orderSelections, selections);
+      _showSnackBar('Order saved successfully');
       setState(() {
         selections.clear();
       });
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error saving order: $e')),
-      );
+      _showSnackBar('Error saving order: $e', isError: true);
     }
+  }
+
+  void _showSnackBar(String message, {bool isError = false}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message, style: TextStyles.bodyText2.copyWith(color: ColorConstants.kWhite)),
+        backgroundColor: isError ? ColorConstants.kErrorColor : ColorConstants.kAccentColor,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: Borders.smallBorderRadius),
+      ),
+    );
   }
 }
 
@@ -115,24 +124,59 @@ class DisplayProduct extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: ListTile(
-        title: Text(product.productName),
-        subtitle: Text('Recipe items: ${product.recipe.length}'),
-        trailing: Row(
-          mainAxisSize: MainAxisSize.min,
+      margin: Insets.symmetricMargin,
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: Borders.mediumBorderRadius),
+      child: Padding(
+        padding: Insets.smallPadding,
+        child: Row(
           children: [
-            IconButton(
-              icon: const Icon(Icons.remove),
-              onPressed: () => onQuantityChanged(quantity > 0 ? quantity - 1 : 0),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(product.productName, style: TextStyles.heading2),
+                  SizedBox(height: Sizes.smallSize),
+                  Text('Recipe items: ${product.recipe.length}', style: TextStyles.bodyText2),
+                ],
+              ),
             ),
-            Text('$quantity'),
-            IconButton(
-              icon: const Icon(Icons.add),
-              onPressed: () => onQuantityChanged(quantity + 1),
-            ),
+            _buildQuantityControls(),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildQuantityControls() {
+    return Container(
+      decoration: BoxDecoration(
+        color: ColorConstants.kCardBackground,
+        borderRadius: Borders.smallBorderRadius,
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _buildControlButton(Icons.remove, () => onQuantityChanged(quantity > 0 ? quantity - 1 : 0)),
+          SizedBox(width: Sizes.smallSize),
+          Text('$quantity', style: TextStyles.bodyText1),
+          SizedBox(width: Sizes.smallSize),
+          _buildControlButton(Icons.add, () => onQuantityChanged(quantity + 1)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildControlButton(IconData icon, VoidCallback onPressed) {
+    return InkWell(
+      onTap: onPressed,
+      child: Container(
+        padding: Insets.smallPadding,
+        decoration: BoxDecoration(
+          color: ColorConstants.kPrimaryColor,
+          shape: BoxShape.circle,
+        ),
+        child: Icon(icon, color: ColorConstants.kWhite, size: Sizes.iconSize),
       ),
     );
   }

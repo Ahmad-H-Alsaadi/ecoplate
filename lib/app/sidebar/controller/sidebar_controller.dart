@@ -12,14 +12,7 @@ class SidebarController {
   }
 
   void handleItemTap(BuildContext context, SidebarModel item) {
-    // if (item.routeName == '/detect_food_waste') {
-    //   Navigator.push(
-    //     context,
-    //     MaterialPageRoute(builder: (context) => const DetectFoodWasteView()),
-    //   );
-    // } else {
     onItemTap(item.routeName);
-    // }
   }
 
   List<SidebarModel> getRegularItems() {

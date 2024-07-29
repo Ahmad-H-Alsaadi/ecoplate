@@ -3,6 +3,8 @@ import 'package:ecoplate/app/items/model/items_model.dart';
 import 'package:ecoplate/app/products/controller/products_controller.dart';
 import 'package:ecoplate/app/products/model/recipe_model.dart';
 import 'package:ecoplate/core/constants/assets.dart';
+import 'package:ecoplate/core/constants/color_constants.dart';
+import 'package:ecoplate/core/constants/decorations.dart';
 import 'package:ecoplate/core/controllers/navigation_controller.dart';
 import 'package:ecoplate/core/views/base_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -41,50 +43,71 @@ class _ProductsViewState extends State<ProductsView> {
       navigationController: widget.navigationController,
       body: SingleChildScrollView(
         child: Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: Insets.largePadding,
           child: Form(
             key: _formKey,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                TextFormField(
-                  controller: _productNameController,
-                  decoration: const InputDecoration(labelText: 'Product Name'),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a product name';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16),
-                Text('Recipe Items:', style: Theme.of(context).textTheme.titleMedium),
-                ..._recipe.map((item) => ListTile(
-                      title: Text(item.item.itemName),
-                      subtitle: Text('Amount: ${item.amount} ${item.item.measurement}'),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: () {
-                          setState(() {
-                            _recipe.remove(item);
-                          });
-                        },
-                      ),
-                    )),
-                ElevatedButton(
-                  onPressed: _showItemSelectionDialog,
-                  child: const Text('Add Recipe Item'),
-                ),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: _createProduct,
-                  child: const Text('Create Product'),
-                ),
+                _buildTextField(_productNameController, 'Product Name'),
+                SizedBox(height: Sizes.mediumSize),
+                Text('Recipe Items:', style: TextStyles.heading2),
+                SizedBox(height: Sizes.smallSize),
+                ..._recipe.map(_buildRecipeItem),
+                SizedBox(height: Sizes.mediumSize),
+                _buildButton('Add Recipe Item', _showItemSelectionDialog),
+                SizedBox(height: Sizes.mediumSize),
+                _buildButton('Create Product', _createProduct),
               ],
             ),
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildTextField(TextEditingController controller, String label) {
+    return TextFormField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: label,
+        border: OutlineInputBorder(borderRadius: Borders.smallBorderRadius),
+        filled: true,
+        fillColor: ColorConstants.kCardBackground,
+      ),
+      style: TextStyles.bodyText1,
+      validator: (value) => value!.isEmpty ? 'Please enter $label' : null,
+    );
+  }
+
+  Widget _buildRecipeItem(RecipeModel item) {
+    return Card(
+      margin: Insets.smallPadding,
+      shape: RoundedRectangleBorder(borderRadius: Borders.smallBorderRadius),
+      child: ListTile(
+        title: Text(item.item.itemName, style: TextStyles.bodyText1),
+        subtitle: Text('Amount: ${item.amount} ${item.item.measurement}', style: TextStyles.bodyText2),
+        trailing: IconButton(
+          icon: Icon(Icons.delete, color: ColorConstants.kErrorColor),
+          onPressed: () {
+            setState(() {
+              _recipe.remove(item);
+            });
+          },
+        ),
+      ),
+    );
+  }
+
+  Widget _buildButton(String text, VoidCallback onPressed) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: ColorConstants.kPrimaryColor,
+        padding: Insets.mediumPadding,
+        shape: RoundedRectangleBorder(borderRadius: Borders.smallBorderRadius),
+      ),
+      child: Text(text, style: TextStyles.buttonText),
     );
   }
 
@@ -112,23 +135,17 @@ class _ProductsViewState extends State<ProductsView> {
             setState(() {
               int existingIndex = _recipe.indexWhere((element) => element.item.id == selectedItem.id);
               if (existingIndex != -1) {
-                // Item already exists, update its amount
                 _recipe[existingIndex] = RecipeModel(
                   item: selectedItem,
                   amount: _recipe[existingIndex].amount + amount,
                 );
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Updated amount for ${selectedItem.itemName}')),
-                );
+                _showSnackBar('Updated amount for ${selectedItem.itemName}');
               } else {
-                // Add new item to recipe
                 _recipe.add(RecipeModel(
                   item: selectedItem,
                   amount: amount,
                 ));
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Added ${selectedItem.itemName} to recipe')),
-                );
+                _showSnackBar('Added ${selectedItem.itemName} to recipe');
               }
             });
             Navigator.of(context).pop();
@@ -141,17 +158,12 @@ class _ProductsViewState extends State<ProductsView> {
   void _createProduct() async {
     if (_formKey.currentState!.validate()) {
       if (_recipe.isEmpty) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Please add at least one item to the recipe')),
-        );
+        _showSnackBar('Please add at least one item to the recipe', isError: true);
         return;
       }
       try {
         await controller.createProduct(_productNameController.text, _recipe);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Product created successfully')),
-        );
-        // Clear the form
+        _showSnackBar('Product created successfully');
         _productNameController.clear();
         setState(() {
           _recipe.clear();
@@ -161,11 +173,20 @@ class _ProductsViewState extends State<ProductsView> {
         if (e is Exception) {
           errorMessage = e.toString().replaceAll('Exception: ', '');
         }
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(errorMessage)),
-        );
+        _showSnackBar(errorMessage, isError: true);
       }
     }
+  }
+
+  void _showSnackBar(String message, {bool isError = false}) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message, style: TextStyles.bodyText2.copyWith(color: ColorConstants.kWhite)),
+        backgroundColor: isError ? ColorConstants.kErrorColor : ColorConstants.kAccentColor,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: Borders.smallBorderRadius),
+      ),
+    );
   }
 }
 
@@ -177,10 +198,10 @@ class ItemSelectionDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Select an Item'),
+      title: Text('Select an Item', style: TextStyles.heading2),
       content: SizedBox(
         width: double.maxFinite,
-        height: 300, // Set a fixed height or use a flexible height based on your needs
+        height: 300,
         child: StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance
               .collection('users')
@@ -189,15 +210,15 @@ class ItemSelectionDialog extends StatelessWidget {
               .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              return const Text('Something went wrong');
+              return Text('Something went wrong', style: TextStyles.bodyText1);
             }
 
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
+              return Center(child: CircularProgressIndicator(color: ColorConstants.kPrimaryColor));
             }
 
             if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-              return const Text('No items found');
+              return Text('No items found', style: TextStyles.bodyText1);
             }
 
             return ListView.builder(
@@ -205,8 +226,8 @@ class ItemSelectionDialog extends StatelessWidget {
               itemBuilder: (context, index) {
                 ItemsModel item = ItemsModel.fromFirestore(snapshot.data!.docs[index]);
                 return ListTile(
-                  title: Text(item.itemName),
-                  subtitle: Text(item.measurement),
+                  title: Text(item.itemName, style: TextStyles.bodyText1),
+                  subtitle: Text(item.measurement, style: TextStyles.bodyText2),
                   onTap: () => onItemSelected(item),
                 );
               },
@@ -235,12 +256,18 @@ class _SetAmountDialogState extends State<SetAmountDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Set Amount for ${widget.item.itemName}'),
+      title: Text('Set Amount for ${widget.item.itemName}', style: TextStyles.heading2),
       content: Form(
         key: _formKey,
         child: TextFormField(
           controller: _amountController,
-          decoration: InputDecoration(labelText: 'Amount (${widget.item.measurement})'),
+          decoration: InputDecoration(
+            labelText: 'Amount (${widget.item.measurement})',
+            border: OutlineInputBorder(borderRadius: Borders.smallBorderRadius),
+            filled: true,
+            fillColor: ColorConstants.kCardBackground,
+          ),
+          style: TextStyles.bodyText1,
           keyboardType: TextInputType.number,
           validator: (value) {
             if (value == null || value.isEmpty) {
@@ -256,7 +283,7 @@ class _SetAmountDialogState extends State<SetAmountDialog> {
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
+          child: Text('Cancel', style: TextStyles.bodyText1.copyWith(color: ColorConstants.kErrorColor)),
         ),
         ElevatedButton(
           onPressed: () {
@@ -264,7 +291,11 @@ class _SetAmountDialogState extends State<SetAmountDialog> {
               widget.onAmountSet(double.parse(_amountController.text));
             }
           },
-          child: const Text('Set'),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: ColorConstants.kPrimaryColor,
+            shape: RoundedRectangleBorder(borderRadius: Borders.smallBorderRadius),
+          ),
+          child: Text('Set', style: TextStyles.buttonText),
         ),
       ],
     );

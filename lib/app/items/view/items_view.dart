@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecoplate/app/items/controller/items_controller.dart';
 import 'package:ecoplate/app/items/model/items_model.dart';
 import 'package:ecoplate/core/constants/assets.dart';
+import 'package:ecoplate/core/constants/color_constants.dart';
+import 'package:ecoplate/core/constants/decorations.dart';
 import 'package:ecoplate/core/controllers/navigation_controller.dart';
 import 'package:ecoplate/core/views/base_view.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -39,15 +41,15 @@ class _ItemsViewState extends State<ItemsView> {
               .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              return const Center(child: Text('Something went wrong'));
+              return Center(child: Text('Something went wrong', style: TextStyles.bodyText1));
             }
 
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
+              return Center(child: CircularProgressIndicator(color: ColorConstants.kPrimaryColor));
             }
 
             if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-              return const Center(child: Text('No items found'));
+              return Center(child: Text('No items found', style: TextStyles.bodyText1));
             }
 
             return ListView.builder(
@@ -67,7 +69,8 @@ class _ItemsViewState extends State<ItemsView> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showAddItemDialog(context),
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.add, color: ColorConstants.kWhite),
+        backgroundColor: ColorConstants.kPrimaryColor,
       ),
     );
   }
@@ -81,11 +84,19 @@ class _ItemsViewState extends State<ItemsView> {
             try {
               await controller.addItem(newItem);
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Item added successfully')),
+                SnackBar(
+                  content: Text('Item added successfully',
+                      style: TextStyles.bodyText2.copyWith(color: ColorConstants.kWhite)),
+                  backgroundColor: ColorConstants.kAccentColor,
+                ),
               );
             } catch (e) {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Error adding item: $e')),
+                SnackBar(
+                  content:
+                      Text('Error adding item: $e', style: TextStyles.bodyText2.copyWith(color: ColorConstants.kWhite)),
+                  backgroundColor: ColorConstants.kErrorColor,
+                ),
               );
             }
           },
@@ -104,11 +115,14 @@ class DisplayItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      margin: Insets.symmetricMargin,
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: Borders.mediumBorderRadius),
       child: ListTile(
-        title: Text(item.itemName),
-        subtitle: Text('VAT: ${item.vatNumber}'),
-        trailing: Text(item.measurement),
+        contentPadding: Insets.mediumPadding,
+        title: Text(item.itemName, style: TextStyles.heading2),
+        subtitle: Text('VAT: ${item.vatNumber}', style: TextStyles.bodyText2),
+        trailing: Text(item.measurement, style: TextStyles.bodyText1),
       ),
     );
   }
@@ -132,40 +146,48 @@ class _AddItemDialogState extends State<AddItemDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: const Text('Add New Item'),
+      title: Text('Add New Item', style: TextStyles.heading2),
       content: Form(
         key: _formKey,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            TextFormField(
-              controller: _vatNumberController,
-              decoration: const InputDecoration(labelText: 'VAT Number'),
-              validator: (value) => value!.isEmpty ? 'Please enter VAT Number' : null,
-            ),
-            TextFormField(
-              controller: _itemNameController,
-              decoration: const InputDecoration(labelText: 'Item Name'),
-              validator: (value) => value!.isEmpty ? 'Please enter Item Name' : null,
-            ),
-            TextFormField(
-              controller: _measurementController,
-              decoration: const InputDecoration(labelText: 'Measurement'),
-              validator: (value) => value!.isEmpty ? 'Please enter Measurement' : null,
-            ),
+            _buildTextField(_vatNumberController, 'VAT Number'),
+            SizedBox(height: Sizes.smallSize),
+            _buildTextField(_itemNameController, 'Item Name'),
+            SizedBox(height: Sizes.smallSize),
+            _buildTextField(_measurementController, 'Measurement'),
           ],
         ),
       ),
       actions: [
         TextButton(
           onPressed: () => Navigator.of(context).pop(),
-          child: const Text('Cancel'),
+          child: Text('Cancel', style: TextStyles.bodyText1.copyWith(color: ColorConstants.kErrorColor)),
         ),
         ElevatedButton(
           onPressed: _submitForm,
-          child: const Text('Add'),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: ColorConstants.kPrimaryColor,
+            shape: RoundedRectangleBorder(borderRadius: Borders.smallBorderRadius),
+          ),
+          child: Text('Add', style: TextStyles.buttonText),
         ),
       ],
+    );
+  }
+
+  Widget _buildTextField(TextEditingController controller, String label) {
+    return TextFormField(
+      controller: controller,
+      decoration: InputDecoration(
+        labelText: label,
+        border: OutlineInputBorder(borderRadius: Borders.smallBorderRadius),
+        filled: true,
+        fillColor: ColorConstants.kCardBackground,
+      ),
+      style: TextStyles.bodyText1,
+      validator: (value) => value!.isEmpty ? 'Please enter $label' : null,
     );
   }
 
