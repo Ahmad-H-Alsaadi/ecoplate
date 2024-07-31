@@ -31,7 +31,7 @@ class PurchasesModel with _$PurchasesModel {
       totalAmount: (data['totalAmount'] as num?)?.toDouble() ?? 0.0,
       vatAmount: (data['vatAmount'] as num?)?.toDouble() ?? 0.0,
       items: (data['items'] as List<dynamic>?)
-              ?.map((item) => StockModel.fromJson(_convertPurchaseItemToStockModel(item)))
+              ?.map((item) => StockModel.fromJson(item as Map<String, dynamic>))
               .toList() ??
           [],
     );
@@ -42,16 +42,5 @@ class PurchasesModel with _$PurchasesModel {
       ..remove('id')
       ..['dateTime'] = Timestamp.fromDate(dateTime)
       ..['items'] = items.map((item) => item.toFirestore()).toList();
-  }
-
-  static Map<String, dynamic> _convertPurchaseItemToStockModel(Map<String, dynamic> purchaseItem) {
-    return {
-      'amount': purchaseItem['amount'],
-      'expireDate': purchaseItem['expireDate'],
-      'id': purchaseItem['item']['id'],
-      'itemName': purchaseItem['item']['itemName'],
-      'measurement': purchaseItem['item']['measurement'],
-      'vatNumber': purchaseItem['item']['vatNumber'],
-    };
   }
 }
