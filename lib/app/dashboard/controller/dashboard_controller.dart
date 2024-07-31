@@ -1,7 +1,6 @@
-// lib/app/dashboard/controller/dashboard_controller.dart
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecoplate/app/detect_food_waste/model/detect_food_waste_model.dart';
+import 'package:ecoplate/app/detect_food_waste/model/food_survey_model.dart';
 import 'package:ecoplate/app/products/model/products_model.dart';
 import 'package:ecoplate/app/purchases/model/purchases_model.dart';
 import 'package:ecoplate/app/stock/model/stock_model.dart';
@@ -50,7 +49,9 @@ class DashboardController {
         .orderBy('dateTime', descending: true)
         .limit(10)
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => PurchasesModel.fromFirestore(doc)).toList());
+        .map((snapshot) {
+      return snapshot.docs.map((doc) => PurchasesModel.fromFirestore(doc)).toList();
+    });
   }
 
   Stream<List<ProductsModel>> getProductsStream() {
@@ -61,5 +62,21 @@ class DashboardController {
         .collection('products')
         .snapshots()
         .map((snapshot) => snapshot.docs.map((doc) => ProductsModel.fromFirestore(doc)).toList());
+  }
+
+  Stream<List<FoodSurveyModel>> getFoodSurveyStream() {
+    String userId = _auth.currentUser!.uid;
+    return _firestore
+        .collection('users')
+        .doc(userId)
+        .collection('surveys')
+        .orderBy('timestamp', descending: true)
+        .limit(5)
+        .snapshots()
+        .map((snapshot) => snapshot.docs.map((doc) => FoodSurveyModel.fromJson(doc.data())).toList());
+  }
+
+  void navigateToFoodSurvey() {
+    navigationController.navigateTo('/food_survey');
   }
 }

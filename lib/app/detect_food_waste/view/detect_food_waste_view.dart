@@ -1,5 +1,4 @@
 import 'package:ecoplate/app/detect_food_waste/controller/detect_food_waste_controller.dart';
-import 'package:ecoplate/core/components/icon_button_with_title.dart';
 import 'package:ecoplate/core/constants/assets.dart';
 import 'package:ecoplate/core/constants/color_constants.dart';
 import 'package:ecoplate/core/constants/decorations.dart';
@@ -9,7 +8,6 @@ import 'package:flutter/material.dart';
 
 class DetectFoodWasteView extends StatefulWidget {
   final NavigationController navigationController;
-
   const DetectFoodWasteView({Key? key, required this.navigationController}) : super(key: key);
 
   @override
@@ -42,29 +40,21 @@ class _DetectFoodWasteViewState extends State<DetectFoodWasteView> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'Choose a camera to detect food waste',
+              'Choose an option',
               style: TextStyles.heading2.copyWith(color: ColorConstants.kPrimaryColor),
               textAlign: TextAlign.center,
             ),
-            SizedBox(height: Sizes.largeSize),
-            _buildCameraButton(
+            const SizedBox(height: Sizes.largeSize),
+            _buildButton(
               icon: Icons.camera_alt,
               title: "Phone Camera",
               onTap: () => controller.navigateToPhoneCamera(context),
             ),
-            SizedBox(height: Sizes.mediumSize),
-            _buildCameraButton(
-              icon: Icons.videocam,
-              title: "Security Camera",
-              onTap: () {
-                // TODO: Implement security camera functionality
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('Security camera feature coming soon!'),
-                    backgroundColor: ColorConstants.kAccentColor,
-                  ),
-                );
-              },
+            const SizedBox(height: Sizes.mediumSize),
+            _buildButton(
+              icon: Icons.assignment,
+              title: "Food Survey",
+              onTap: () => controller.navigateToFoodSurvey(context),
             ),
           ],
         ),
@@ -72,7 +62,7 @@ class _DetectFoodWasteViewState extends State<DetectFoodWasteView> {
     );
   }
 
-  Widget _buildCameraButton({
+  Widget _buildButton({
     required IconData icon,
     required String title,
     required VoidCallback onTap,
@@ -85,13 +75,13 @@ class _DetectFoodWasteViewState extends State<DetectFoodWasteView> {
         style: ElevatedButton.styleFrom(
           backgroundColor: ColorConstants.kPrimaryColor,
           padding: Insets.mediumPadding,
-          shape: RoundedRectangleBorder(borderRadius: Borders.mediumBorderRadius),
+          shape: const RoundedRectangleBorder(borderRadius: Borders.mediumBorderRadius),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Icon(icon, size: Sizes.iconSize, color: ColorConstants.kWhite),
-            SizedBox(height: Sizes.smallSize),
+            const SizedBox(height: Sizes.smallSize),
             Text(
               title,
               style: TextStyles.bodyText1.copyWith(color: ColorConstants.kWhite),

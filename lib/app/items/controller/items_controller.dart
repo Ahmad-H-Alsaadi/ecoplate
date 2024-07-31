@@ -23,13 +23,11 @@ class ItemsController {
     try {
       final batch = _firestore.batch();
 
-      // Add or update item in the 'items' collection
       DocumentReference itemDocRef =
           _firestore.collection('users').doc(user.uid).collection('items').doc(item.itemName);
 
       batch.set(itemDocRef, item.toFirestore(), SetOptions(merge: true));
 
-      // Check if the item already exists in the 'stock' collection
       QuerySnapshot existingStock = await _firestore
           .collection('users')
           .doc(user.uid)
@@ -39,24 +37,21 @@ class ItemsController {
           .get();
 
       if (existingStock.docs.isNotEmpty) {
-        // Update existing stock item
         DocumentReference stockDocRef = existingStock.docs.first.reference;
         batch.update(stockDocRef, {
           'item': item.toFirestore(),
         });
       } else {
-        // Add new stock item with initial amount 0
         DocumentReference stockDocRef = _firestore.collection('users').doc(user.uid).collection('stock').doc();
 
         batch.set(stockDocRef, {
           'id': stockDocRef.id,
           'item': item.toFirestore(),
           'amount': 0,
-          'expireDate': null, // You might want to set a default expire date or leave it null
+          'expireDate': null,
         });
       }
 
-      // Commit the batch
       await batch.commit();
     } catch (e) {
       print('Error adding item: $e');

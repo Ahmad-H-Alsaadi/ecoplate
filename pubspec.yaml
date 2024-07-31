@@ -51,6 +51,7 @@ dependencies:
     image_picker: ^1.1.2
     file_picker: ^8.0.6
     fl_chart: ^0.68.0
+    mockito: ^5.4.4
 
 flutter_launcher_icons:
     android: "launcher_icon"
@@ -92,7 +93,6 @@ flutter:
         - assets/images/purchases.png
         - assets/images/detect_waste.png
         - assets/images/stock.png
-        - assets/images/wallet.png
         - assets/images/qr_scanner.png
         - assets/images/camera.png
         - assets/images/security_cameras.png

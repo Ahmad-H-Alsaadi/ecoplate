@@ -58,7 +58,7 @@ class _PurchasesViewState extends State<PurchasesView> {
             child: ListView(
               children: [
                 _buildScannedDataCard(),
-                SizedBox(height: Sizes.mediumSize),
+                const SizedBox(height: Sizes.mediumSize),
                 _buildAddedItemsSection(),
               ],
             ),
@@ -71,17 +71,31 @@ class _PurchasesViewState extends State<PurchasesView> {
   }
 
   Widget _buildScannedDataCard() {
+    if (widget.decodedData.isEmpty) {
+      return const Card(
+        margin: Insets.mediumPadding,
+        shape: RoundedRectangleBorder(borderRadius: Borders.mediumBorderRadius),
+        elevation: 4,
+        child: Padding(
+          padding: Insets.mediumPadding,
+          child: Center(
+            child: Text('No scanned data available', style: TextStyles.bodyText1),
+          ),
+        ),
+      );
+    }
+
     return Card(
       margin: Insets.mediumPadding,
-      shape: RoundedRectangleBorder(borderRadius: Borders.mediumBorderRadius),
+      shape: const RoundedRectangleBorder(borderRadius: Borders.mediumBorderRadius),
       elevation: 4,
       child: Padding(
         padding: Insets.mediumPadding,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Scanned Data', style: TextStyles.heading2),
-            SizedBox(height: Sizes.smallSize),
+            const Text('Scanned Data', style: TextStyles.heading2),
+            const SizedBox(height: Sizes.smallSize),
             ...widget.decodedData.entries.map((entry) {
               return Padding(
                 padding: Insets.smallPadding,
@@ -98,7 +112,7 @@ class _PurchasesViewState extends State<PurchasesView> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Padding(
+        const Padding(
           padding: Insets.mediumPadding,
           child: Text('Added Items', style: TextStyles.heading2),
         ),
@@ -116,12 +130,12 @@ class _PurchasesViewState extends State<PurchasesView> {
       padding: Insets.mediumPadding,
       child: ElevatedButton.icon(
         onPressed: _showAddExistingItemDialog,
-        icon: Icon(Icons.add, color: ColorConstants.kWhite),
-        label: Text('Add Existing Item', style: TextStyles.buttonText),
+        icon: const Icon(Icons.add, color: ColorConstants.kWhite),
+        label: const Text('Add Existing Item', style: TextStyles.buttonText),
         style: ElevatedButton.styleFrom(
           backgroundColor: ColorConstants.kPrimaryColor,
           padding: Insets.symmetricPadding,
-          shape: RoundedRectangleBorder(borderRadius: Borders.smallBorderRadius),
+          shape: const RoundedRectangleBorder(borderRadius: Borders.smallBorderRadius),
         ),
       ),
     );
@@ -133,12 +147,12 @@ class _PurchasesViewState extends State<PurchasesView> {
       child: Row(
         children: [
           Expanded(
-            child: _buildActionButton('Save Purchase', _savePurchase, ColorConstants.kAccentColor),
+            child: _buildActionButton('Save Purchase', _savePurchase, ColorConstants.kPrimaryColor),
           ),
-          SizedBox(width: Sizes.mediumSize),
+          const SizedBox(width: Sizes.mediumSize),
           Expanded(
             child: _buildActionButton(
-                'Scan Another QR Code', () => controller.navigateTo('/qr_code_scanner'), ColorConstants.kPrimaryColor),
+                'Scan QR Code', () => controller.navigateTo('/qr_code_scanner'), ColorConstants.kPrimaryColor),
           ),
         ],
       ),
@@ -151,76 +165,89 @@ class _PurchasesViewState extends State<PurchasesView> {
       style: ElevatedButton.styleFrom(
         backgroundColor: color,
         padding: Insets.symmetricPadding,
-        shape: RoundedRectangleBorder(borderRadius: Borders.smallBorderRadius),
+        shape: const RoundedRectangleBorder(borderRadius: Borders.smallBorderRadius),
       ),
       child: Text(text, style: TextStyles.buttonText),
     );
   }
 
   void _showAddExistingItemDialog() {
+    ItemsModel? selectedItem;
+    double amount = 0;
+    final TextEditingController amountController = TextEditingController();
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        ItemsModel? selectedItem;
-        double amount = 0;
-        return AlertDialog(
-          title: Text('Add Existing Item', style: TextStyles.heading2),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              DropdownButton<ItemsModel>(
-                hint: Text('Select an item', style: TextStyles.bodyText1),
-                value: selectedItem,
-                items: savedItems.map((ItemsModel item) {
-                  return DropdownMenuItem<ItemsModel>(
-                    value: item,
-                    child: Text(item.itemName, style: TextStyles.bodyText1),
-                  );
-                }).toList(),
-                onChanged: (ItemsModel? value) {
-                  setState(() {
-                    selectedItem = value;
-                  });
-                },
-              ),
-              SizedBox(height: Sizes.smallSize),
-              TextField(
-                decoration: InputDecoration(
-                  labelText: 'Amount',
-                  border: OutlineInputBorder(borderRadius: Borders.smallBorderRadius),
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: const Text('Add Existing Item', style: TextStyles.heading2),
+              content: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    DropdownButtonFormField<ItemsModel>(
+                      decoration: Styles.textFieldDecoration.copyWith(
+                        labelText: 'Select an item',
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      ),
+                      value: selectedItem,
+                      items: savedItems.map((ItemsModel item) {
+                        return DropdownMenuItem<ItemsModel>(
+                          value: item,
+                          child: Text(item.itemName, style: TextStyles.bodyText1),
+                        );
+                      }).toList(),
+                      onChanged: (ItemsModel? value) {
+                        setState(() {
+                          selectedItem = value;
+                        });
+                      },
+                    ),
+                    const SizedBox(height: Sizes.mediumSize),
+                    TextFormField(
+                      controller: amountController,
+                      decoration: Styles.textFieldDecoration.copyWith(
+                        labelText: 'Amount',
+                        suffixText: selectedItem?.measurement ?? '',
+                      ),
+                      style: TextStyles.bodyText1,
+                      keyboardType: TextInputType.number,
+                      onChanged: (value) {
+                        amount = double.tryParse(value) ?? 0;
+                      },
+                    ),
+                  ],
                 ),
-                style: TextStyles.bodyText1,
-                keyboardType: TextInputType.number,
-                onChanged: (value) {
-                  amount = double.tryParse(value) ?? 0;
-                },
               ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              child: Text('Cancel', style: TextStyles.bodyText1.copyWith(color: ColorConstants.kErrorColor)),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-            ElevatedButton(
-              child: Text('Add', style: TextStyles.buttonText),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: ColorConstants.kPrimaryColor,
-                shape: RoundedRectangleBorder(borderRadius: Borders.smallBorderRadius),
-              ),
-              onPressed: () {
-                if (selectedItem != null && amount > 0) {
-                  _addItem(StockModel(
-                    id: '',
-                    item: selectedItem!,
-                    amount: amount,
-                    expireDate: DateTime.now().add(const Duration(days: 30)),
-                  ));
-                  Navigator.of(context).pop();
-                }
-              },
-            ),
-          ],
+              actions: [
+                TextButton(
+                  child: Text('Cancel', style: TextStyles.bodyText1.copyWith(color: ColorConstants.kErrorColor)),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: ColorConstants.kPrimaryColor,
+                    shape: const RoundedRectangleBorder(borderRadius: Borders.smallBorderRadius),
+                  ),
+                  onPressed: () {
+                    if (selectedItem != null && amount > 0) {
+                      _addItem(StockModel(
+                        id: '',
+                        item: selectedItem!,
+                        amount: amount,
+                        expireDate: DateTime.now().add(const Duration(days: 30)),
+                      ));
+                      Navigator.of(context).pop();
+                    }
+                  },
+                  child: const Text('Add', style: TextStyles.buttonText),
+                ),
+              ],
+            );
+          },
         );
       },
     );
@@ -230,7 +257,7 @@ class _PurchasesViewState extends State<PurchasesView> {
     try {
       await controller.saveItemIfNotExists(item.item);
       _addItem(item);
-      await _loadSavedItems(); // Refresh the saved items list
+      await _loadSavedItems();
     } catch (e) {
       _showSnackBar('Error adding new item: $e', isError: true);
     }
@@ -259,11 +286,11 @@ class _PurchasesViewState extends State<PurchasesView> {
         vatAmount: double.parse(widget.decodedData['vat_amount'] ?? '0'),
         items: items,
       );
-
       await controller.savePurchase(purchaseModel);
       _showSnackBar('Purchase saved successfully');
       setState(() {
         items.clear();
+        widget.decodedData.clear();
       });
     } catch (e) {
       _showSnackBar('Error saving purchase: $e', isError: true);
@@ -276,7 +303,7 @@ class _PurchasesViewState extends State<PurchasesView> {
         content: Text(message, style: TextStyles.bodyText2.copyWith(color: ColorConstants.kWhite)),
         backgroundColor: isError ? ColorConstants.kErrorColor : ColorConstants.kAccentColor,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: Borders.smallBorderRadius),
+        shape: const RoundedRectangleBorder(borderRadius: Borders.smallBorderRadius),
       ),
     );
   }

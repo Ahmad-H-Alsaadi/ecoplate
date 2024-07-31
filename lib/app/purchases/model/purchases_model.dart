@@ -1,6 +1,6 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecoplate/app/stock/model/stock_model.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'purchases_model.freezed.dart';
 part 'purchases_model.g.dart';
@@ -25,12 +25,15 @@ class PurchasesModel with _$PurchasesModel {
     final data = doc.data() as Map<String, dynamic>;
     return PurchasesModel(
       id: doc.id,
-      sellerName: data['seller_name'] as String,
-      vatNumber: data['vat_number'] as String,
-      dateTime: (data['timestamp'] as Timestamp).toDate(),
-      totalAmount: (data['total_amount'] as num).toDouble(),
-      vatAmount: (data['vat_amount'] as num).toDouble(),
-      items: (data['items'] as List<dynamic>).map((item) => StockModel.fromJson(item as Map<String, dynamic>)).toList(),
+      sellerName: data['sellerName'] as String? ?? '',
+      vatNumber: data['vatNumber'] as String? ?? '',
+      dateTime: (data['dateTime'] as Timestamp).toDate(),
+      totalAmount: (data['totalAmount'] as num?)?.toDouble() ?? 0.0,
+      vatAmount: (data['vatAmount'] as num?)?.toDouble() ?? 0.0,
+      items: (data['items'] as List<dynamic>?)
+              ?.map((item) => StockModel.fromJson(_convertPurchaseItemToStockModel(item)))
+              .toList() ??
+          [],
     );
   }
 
@@ -39,5 +42,16 @@ class PurchasesModel with _$PurchasesModel {
       ..remove('id')
       ..['dateTime'] = Timestamp.fromDate(dateTime)
       ..['items'] = items.map((item) => item.toFirestore()).toList();
+  }
+
+  static Map<String, dynamic> _convertPurchaseItemToStockModel(Map<String, dynamic> purchaseItem) {
+    return {
+      'amount': purchaseItem['amount'],
+      'expireDate': purchaseItem['expireDate'],
+      'id': purchaseItem['item']['id'],
+      'itemName': purchaseItem['item']['itemName'],
+      'measurement': purchaseItem['item']['measurement'],
+      'vatNumber': purchaseItem['item']['vatNumber'],
+    };
   }
 }

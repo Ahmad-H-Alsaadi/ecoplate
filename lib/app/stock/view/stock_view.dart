@@ -29,13 +29,15 @@ class _StockViewState extends State<StockView> {
         stream: _stockController.getStockStream(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator(color: ColorConstants.kPrimaryColor));
+            return const Center(child: CircularProgressIndicator(color: ColorConstants.kPrimaryColor));
           }
           if (snapshot.hasError) {
-            return Center(child: Text('Error: ${snapshot.error}', style: TextStyles.bodyText1));
+            return Center(
+                child: Text('Error: ${snapshot.error}',
+                    style: TextStyles.bodyText1.copyWith(color: ColorConstants.kErrorColor)));
           }
           if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('No stock items found.', style: TextStyles.bodyText1));
+            return const Center(child: Text('No stock items found.', style: TextStyles.bodyText1));
           }
           return ListView.builder(
             itemCount: snapshot.data!.length,
@@ -51,21 +53,24 @@ class _StockViewState extends State<StockView> {
 
   Widget _buildStockItemCard(StockModel stockItem) {
     return Card(
-      margin: Insets.symmetricMargin,
+      margin: Insets.mediumPadding,
       elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: Borders.mediumBorderRadius),
-      child: Padding(
-        padding: Insets.mediumPadding,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(stockItem.item.itemName, style: TextStyles.heading2),
-            SizedBox(height: Sizes.smallSize),
-            _buildInfoRow('Quantity', '${stockItem.amount} ${stockItem.item.measurement}'),
-            _buildInfoRow('Expires', DateFormat('yyyy-MM-dd').format(stockItem.expireDate)),
-            SizedBox(height: Sizes.smallSize),
-            _buildExpiryInfo(stockItem.expireDate),
-          ],
+      shape: const RoundedRectangleBorder(borderRadius: Borders.mediumBorderRadius),
+      child: Container(
+        decoration: Styles.cardDecoration,
+        child: Padding(
+          padding: Insets.mediumPadding,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(stockItem.item.itemName, style: TextStyles.heading2.copyWith(color: ColorConstants.kPrimaryColor)),
+              const SizedBox(height: Sizes.mediumSize),
+              _buildInfoRow('Quantity', '${stockItem.amount} ${stockItem.item.measurement}'),
+              _buildInfoRow('Expires', DateFormat('yyyy-MM-dd').format(stockItem.expireDate)),
+              const SizedBox(height: Sizes.mediumSize),
+              _buildExpiryInfo(stockItem.expireDate),
+            ],
+          ),
         ),
       ),
     );
@@ -77,8 +82,8 @@ class _StockViewState extends State<StockView> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(label, style: TextStyles.bodyText2),
-          Text(value, style: TextStyles.bodyText1),
+          Text(label, style: TextStyles.bodyText2.copyWith(color: ColorConstants.kPrimaryColor)),
+          Text(value, style: TextStyles.bodyText1.copyWith(fontWeight: FontWeight.bold)),
         ],
       ),
     );
@@ -88,14 +93,21 @@ class _StockViewState extends State<StockView> {
     final daysLeft = _getDaysUntilExpiry(expiryDate);
     final color = _getExpiryColor(expiryDate);
     return Container(
-      padding: Insets.smallPadding,
+      padding: Insets.mediumPadding,
       decoration: BoxDecoration(
         color: color.withOpacity(0.1),
         borderRadius: Borders.smallBorderRadius,
       ),
-      child: Text(
-        '$daysLeft days left',
-        style: TextStyles.bodyText1.copyWith(color: color, fontWeight: FontWeight.bold),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.access_time, color: color, size: Sizes.iconSize),
+          const SizedBox(width: Sizes.smallSize),
+          Text(
+            '$daysLeft days left',
+            style: TextStyles.bodyText1.copyWith(color: color, fontWeight: FontWeight.bold),
+          ),
+        ],
       ),
     );
   }

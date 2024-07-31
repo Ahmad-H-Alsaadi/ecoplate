@@ -41,15 +41,15 @@ class _ItemsViewState extends State<ItemsView> {
               .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              return Center(child: Text('Something went wrong', style: TextStyles.bodyText1));
+              return const Center(child: Text('Something went wrong', style: TextStyles.bodyText1));
             }
 
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator(color: ColorConstants.kPrimaryColor));
+              return const Center(child: CircularProgressIndicator(color: ColorConstants.kPrimaryColor));
             }
 
             if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-              return Center(child: Text('No items found', style: TextStyles.bodyText1));
+              return const Center(child: Text('No items found', style: TextStyles.bodyText1));
             }
 
             return ListView.builder(
@@ -58,9 +58,7 @@ class _ItemsViewState extends State<ItemsView> {
                 final item = ItemsModel.fromFirestore(snapshot.data!.docs[index]);
                 return DisplayItem(
                   item: item,
-                  onDelete: () {
-                    // Implement delete functionality if needed
-                  },
+                  onDelete: () {},
                 );
               },
             );
@@ -69,8 +67,8 @@ class _ItemsViewState extends State<ItemsView> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showAddItemDialog(context),
-        child: const Icon(Icons.add, color: ColorConstants.kWhite),
         backgroundColor: ColorConstants.kPrimaryColor,
+        child: const Icon(Icons.add, color: ColorConstants.kWhite),
       ),
     );
   }
@@ -117,7 +115,7 @@ class DisplayItem extends StatelessWidget {
     return Card(
       margin: Insets.symmetricMargin,
       elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: Borders.mediumBorderRadius),
+      shape: const RoundedRectangleBorder(borderRadius: Borders.mediumBorderRadius),
       child: ListTile(
         contentPadding: Insets.mediumPadding,
         title: Text(item.itemName, style: TextStyles.heading2),
@@ -146,16 +144,16 @@ class _AddItemDialogState extends State<AddItemDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Add New Item', style: TextStyles.heading2),
+      title: const Text('Add New Item', style: TextStyles.heading2),
       content: Form(
         key: _formKey,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             _buildTextField(_vatNumberController, 'VAT Number'),
-            SizedBox(height: Sizes.smallSize),
+            const SizedBox(height: Sizes.smallSize),
             _buildTextField(_itemNameController, 'Item Name'),
-            SizedBox(height: Sizes.smallSize),
+            const SizedBox(height: Sizes.smallSize),
             _buildTextField(_measurementController, 'Measurement'),
           ],
         ),
@@ -169,9 +167,9 @@ class _AddItemDialogState extends State<AddItemDialog> {
           onPressed: _submitForm,
           style: ElevatedButton.styleFrom(
             backgroundColor: ColorConstants.kPrimaryColor,
-            shape: RoundedRectangleBorder(borderRadius: Borders.smallBorderRadius),
+            shape: const RoundedRectangleBorder(borderRadius: Borders.smallBorderRadius),
           ),
-          child: Text('Add', style: TextStyles.buttonText),
+          child: const Text('Add', style: TextStyles.buttonText),
         ),
       ],
     );
@@ -182,7 +180,7 @@ class _AddItemDialogState extends State<AddItemDialog> {
       controller: controller,
       decoration: InputDecoration(
         labelText: label,
-        border: OutlineInputBorder(borderRadius: Borders.smallBorderRadius),
+        border: const OutlineInputBorder(borderRadius: Borders.smallBorderRadius),
         filled: true,
         fillColor: ColorConstants.kCardBackground,
       ),

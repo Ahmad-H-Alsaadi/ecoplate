@@ -35,3 +35,33 @@ Map<String, dynamic> _$$FoodServerSelectionImplToJson(
       'productId': instance.productId,
       'quantity': instance.quantity,
     };
+
+_$FoodSurveyModelImpl _$$FoodSurveyModelImplFromJson(
+        Map<String, dynamic> json) =>
+    _$FoodSurveyModelImpl(
+      productName: json['productName'] as String,
+      quantityReceived: json['quantityReceived'] as String,
+      quantityWasted: json['quantityWasted'] as String,
+      wasteReasons: (json['wasteReasons'] as List<dynamic>)
+          .map((e) => e as String)
+          .toList(),
+      satisfactionLevel: json['satisfactionLevel'] as String,
+      otherProduct: json['otherProduct'] as String?,
+      otherWasteReason: json['otherWasteReason'] as String?,
+      improvementSuggestions: json['improvementSuggestions'] as String?,
+      timestamp: DateTime.parse(json['timestamp'] as String),
+    );
+
+Map<String, dynamic> _$$FoodSurveyModelImplToJson(
+        _$FoodSurveyModelImpl instance) =>
+    <String, dynamic>{
+      'productName': instance.productName,
+      'quantityReceived': instance.quantityReceived,
+      'quantityWasted': instance.quantityWasted,
+      'wasteReasons': instance.wasteReasons,
+      'satisfactionLevel': instance.satisfactionLevel,
+      'otherProduct': instance.otherProduct,
+      'otherWasteReason': instance.otherWasteReason,
+      'improvementSuggestions': instance.improvementSuggestions,
+      'timestamp': instance.timestamp.toIso8601String(),
+    };

@@ -61,7 +61,6 @@ class _RegisterViewState extends State<RegisterView> {
         password: _passwordController.text,
         name: _nameController.text.trim(),
       );
-      // Registration successful, navigate to the next screen
       widget.navigationController.navigateTo('/home');
     } catch (e) {
       setState(() {
@@ -71,7 +70,6 @@ class _RegisterViewState extends State<RegisterView> {
       setState(() {
         _isLoading = false;
       });
-      // Check if the user is actually signed in, despite any errors
       if (FirebaseAuth.instance.currentUser != null) {
         widget.navigationController.navigateTo('/home');
       }
@@ -111,7 +109,6 @@ class _RegisterViewState extends State<RegisterView> {
                 hintText: 'Email',
                 obscureText: false,
                 icon: const Icon(Icons.email_outlined),
-                // keyboardType: TextInputType.emailAddress,
               ),
               const SizedBox(height: 10),
               AppTextField(

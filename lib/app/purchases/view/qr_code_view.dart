@@ -75,17 +75,17 @@ class _QRCodeViewState extends State<QRCodeView> with WidgetsBindingObserver {
           width: 250,
           height: 250,
           decoration: BoxDecoration(
-            border: Border.all(color: ColorConstants.kAccentColor, width: 3),
+            border: Border.all(color: ColorConstants.kPrimaryColor, width: 3),
             borderRadius: Borders.largeBorderRadius,
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(Icons.qr_code_scanner, size: Sizes.extraLargeSize, color: ColorConstants.kWhite),
-              SizedBox(height: Sizes.mediumSize),
+              const Icon(Icons.qr_code_scanner, size: Sizes.extraLargeSize, color: ColorConstants.kPrimaryColor),
+              const SizedBox(height: Sizes.mediumSize),
               Text(
                 'Scan QR Code',
-                style: TextStyles.heading2.copyWith(color: ColorConstants.kWhite),
+                style: TextStyles.heading2.copyWith(color: ColorConstants.kPrimaryColor),
                 textAlign: TextAlign.center,
               ),
             ],

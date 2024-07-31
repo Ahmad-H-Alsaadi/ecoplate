@@ -19,7 +19,7 @@ class CameraController {
   String detectionResult = '';
   bool isLoading = false;
   List<Map<String, dynamic>> boxes = [];
-  List<ProductsModel> products = [];
+  Stream<List<ProductsModel>> productsStream = const Stream.empty();
 
   Future<void> openCamera() async {
     final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
@@ -45,7 +45,7 @@ class CameraController {
     try {
       final bytes = await image!.readAsBytes();
       final base64Image = base64Encode(bytes);
-      print("Image size: ${bytes.length} bytes"); // Debug print
+      print("Image size: ${bytes.length} bytes");
       final response = await http.post(
         Uri.parse('http://192.168.3.31:5000/detect'),
         headers: {'Content-Type': 'application/json'},
@@ -56,6 +56,7 @@ class CameraController {
         print("Raw server response: $result");
         detectionResult = 'Food Waste: ${result['waste_percentage'].toStringAsFixed(2)}%';
         boxes = List<Map<String, dynamic>>.from(result['detections']);
+        print("Boxes: $boxes"); // Add this line
       } else {
         print("Server error: ${response.statusCode} - ${response.body}");
         detectionResult = 'Server Error: ${response.body}';
@@ -71,31 +72,23 @@ class CameraController {
   Future<ui.Image> getImage(File file) async {
     final bytes = await file.readAsBytes();
     final completer = Completer<ui.Image>();
-    ui.decodeImageFromList(bytes, completer.complete);
+    ui.decodeImageFromList(bytes, (ui.Image img) {
+      print("Image decoded: ${img.width} x ${img.height}");
+      completer.complete(img);
+    });
     return completer.future;
   }
 
-  Future<void> loadProducts() async {
-    products = await getAllProducts().first;
-  }
-
-  Stream<List<ProductsModel>> getAllProducts() {
+  void loadProducts() {
     User? user = _auth.currentUser;
     if (user == null) {
       throw Exception('No user logged in');
     }
-    return _firestore.collection('users').doc(user.uid).collection('products').snapshots().map((snapshot) {
-      return snapshot.docs
-          .map((doc) {
-            try {
-              return ProductsModel.fromFirestore(doc);
-            } catch (e) {
-              print('Error parsing product: ${doc.id}, Error: $e');
-              return null;
-            }
-          })
-          .whereType<ProductsModel>()
-          .toList();
+
+    productsStream = _firestore.collection('users').doc(user.uid).collection('products').snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) {
+        return ProductsModel.fromFirestore(doc);
+      }).toList();
     });
   }
 
@@ -120,6 +113,65 @@ class CameraController {
     } catch (e) {
       print('Error saving to Firestore: $e');
       throw Exception('Failed to save product waste');
+    }
+  }
+
+  Future<void> saveAndReduceProductWaste(ProductsModel product, double wastePercentage) async {
+    User? user = _auth.currentUser;
+    if (user == null) {
+      throw Exception('No user logged in');
+    }
+
+    try {
+      // Save the food waste detection
+      final detectFoodWaste = DetectFoodWasteModel(
+        productName: product.productName,
+        wastePercentage: wastePercentage,
+        timestamp: DateTime.now(),
+      );
+      await _firestore
+          .collection('users')
+          .doc(user.uid)
+          .collection('food_waste_detections')
+          .add(detectFoodWaste.toFirestore());
+
+      // Query for the product
+      QuerySnapshot productQuery = await _firestore
+          .collection('users')
+          .doc(user.uid)
+          .collection('products')
+          .where('productName', isEqualTo: product.productName)
+          .limit(1)
+          .get();
+
+      if (productQuery.docs.isEmpty) {
+        throw Exception('Product not found in database');
+      }
+
+      DocumentSnapshot productDoc = productQuery.docs.first;
+
+      List<dynamic> currentRecipe = (productDoc.data() as Map<String, dynamic>)['recipe'] ?? [];
+
+      List<Map<String, dynamic>> updatedRecipe = currentRecipe.map((recipeItem) {
+        Map<String, dynamic> typedRecipeItem = Map<String, dynamic>.from(recipeItem);
+        double currentAmount = typedRecipeItem['amount'] ?? 0.0;
+        double reducedAmount = currentAmount * (1 - wastePercentage / 100);
+        return {
+          ...typedRecipeItem,
+          'amount': reducedAmount,
+        };
+      }).toList();
+
+      await _firestore.collection('users').doc(user.uid).collection('products').doc(productDoc.id).update({
+        'recipe': updatedRecipe,
+      });
+    } catch (e) {
+      print('Error saving and reducing product waste: $e');
+      if (e is FirebaseException) {
+        throw Exception('Firebase error: ${e.code} - ${e.message}');
+      } else {
+        throw Exception('Failed to save and reduce product waste: ${e.toString()}');
+      }
     }
   }
 }

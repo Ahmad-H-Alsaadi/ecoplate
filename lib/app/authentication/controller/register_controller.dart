@@ -37,15 +37,12 @@ class RegisterController {
       print("Error in registerUser: $e");
       print("Stack trace: $stackTrace");
 
-      // Check if the error is the specific PigeonUserDetails error
       if (e.toString().contains("type 'List<Object?>' is not a subtype of type 'PigeonUserDetails?'")) {
-        // The user was likely created successfully, but we got an error when trying to read the response
-        // We'll try to fetch the current user manually
         User? currentUser = FirebaseAuth.instance.currentUser;
         if (currentUser != null) {
           print("User likely created successfully. UID: ${currentUser.uid}");
           await _saveUserDataToFirestore(user: currentUser, name: name);
-          return; // Registration successful
+          return;
         }
       }
 

@@ -37,7 +37,7 @@ class _HomeViewState extends State<HomeView> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _buildWelcomeSection(),
-              SizedBox(height: Sizes.largeSize),
+              const SizedBox(height: Sizes.largeSize),
               _buildGridView(),
             ],
           ),
@@ -51,16 +51,16 @@ class _HomeViewState extends State<HomeView> {
       stream: controller.getUserName(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return CircularProgressIndicator(color: ColorConstants.kPrimaryColor);
+          return const CircularProgressIndicator(color: ColorConstants.kPrimaryColor);
         }
         String userName = snapshot.data ?? 'User';
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Welcome,', style: TextStyles.heading2),
+            const Text('Welcome,', style: TextStyles.heading2),
             Text(userName, style: TextStyles.heading1.copyWith(color: ColorConstants.kPrimaryColor)),
-            SizedBox(height: Sizes.mediumSize),
-            Text('What would you like to do today?', style: TextStyles.bodyText1),
+            const SizedBox(height: Sizes.mediumSize),
+            const Text('What would you like to do today?', style: TextStyles.bodyText1),
           ],
         );
       },
@@ -82,7 +82,7 @@ class _HomeViewState extends State<HomeView> {
   Widget _buildGridItem(HomeModel item) {
     return Card(
       elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: Borders.mediumBorderRadius),
+      shape: const RoundedRectangleBorder(borderRadius: Borders.mediumBorderRadius),
       child: InkWell(
         onTap: () => controller.navigateTo(item.route),
         child: Padding(
@@ -90,9 +90,11 @@ class _HomeViewState extends State<HomeView> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Icon(item.icon, size: Sizes.extraLargeSize, color: item.color),
-              SizedBox(height: Sizes.smallSize),
-              Text(item.title, style: TextStyles.bodyText1.copyWith(color: item.color), textAlign: TextAlign.center),
+              Icon(item.icon, size: Sizes.extraLargeSize, color: ColorConstants.kPrimaryColor),
+              const SizedBox(height: Sizes.smallSize),
+              Text(item.title,
+                  style: TextStyles.bodyText1.copyWith(color: ColorConstants.kPrimaryColor),
+                  textAlign: TextAlign.center),
             ],
           ),
         ),

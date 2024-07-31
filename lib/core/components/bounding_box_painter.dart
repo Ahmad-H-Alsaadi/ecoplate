@@ -1,6 +1,8 @@
 import 'dart:math' as math;
 import 'dart:ui' as ui;
 
+import 'package:ecoplate/core/constants/color_constants.dart';
+import 'package:ecoplate/core/constants/decorations.dart';
 import 'package:flutter/material.dart';
 
 class BoundingBoxPainter extends CustomPainter {
@@ -12,9 +14,13 @@ class BoundingBoxPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.red
+      ..color = ColorConstants.kAccentColor.withOpacity(0.7)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.0;
+
+    final labelPaint = Paint()
+      ..color = ColorConstants.kPrimaryColor.withOpacity(0.7)
+      ..style = PaintingStyle.fill;
 
     final textPainter = TextPainter(
       textDirection: TextDirection.ltr,
@@ -34,13 +40,28 @@ class BoundingBoxPainter extends CustomPainter {
       final rect = Rect.fromLTRB(x1, y1, x2, y2);
       canvas.drawRect(rect, paint);
 
-      // Draw label
+      final labelText = '${box['class']}: ${(box['confidence'] * 100).toStringAsFixed(0)}%';
       textPainter.text = TextSpan(
-        text: '${box['class']}: ${(box['confidence'] * 100).toStringAsFixed(0)}%',
-        style: TextStyle(color: Colors.red, fontSize: 12, backgroundColor: Colors.white),
+        text: labelText,
+        style: TextStyles.bodyText2.copyWith(
+          color: ColorConstants.kWhite,
+          fontSize: 12,
+        ),
       );
       textPainter.layout();
-      textPainter.paint(canvas, Offset(x1, y1 - 15));
+
+      final labelBackgroundRect = Rect.fromLTWH(
+        x1,
+        y1 - textPainter.height - 4,
+        textPainter.width + 8,
+        textPainter.height + 4,
+      );
+      canvas.drawRRect(
+        RRect.fromRectAndRadius(labelBackgroundRect, const Radius.circular(4)),
+        labelPaint,
+      );
+
+      textPainter.paint(canvas, Offset(x1 + 4, y1 - textPainter.height - 2));
     }
   }
 

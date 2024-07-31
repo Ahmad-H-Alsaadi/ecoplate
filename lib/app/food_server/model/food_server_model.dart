@@ -1,7 +1,5 @@
-// food_server_model.dart
-
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:ecoplate/app/products/model/products_model.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'food_server_model.freezed.dart';
 part 'food_server_model.g.dart';
@@ -24,4 +22,21 @@ class FoodServerSelection with _$FoodServerSelection {
   }) = _FoodServerSelection;
 
   factory FoodServerSelection.fromJson(Map<String, dynamic> json) => _$FoodServerSelectionFromJson(json);
+}
+
+@freezed
+class FoodSurveyModel with _$FoodSurveyModel {
+  const factory FoodSurveyModel({
+    required String productName,
+    required String quantityReceived,
+    required String quantityWasted,
+    required List<String> wasteReasons,
+    required String satisfactionLevel,
+    String? otherProduct,
+    String? otherWasteReason,
+    String? improvementSuggestions,
+    required DateTime timestamp,
+  }) = _FoodSurveyModel;
+
+  factory FoodSurveyModel.fromJson(Map<String, dynamic> json) => _$FoodSurveyModelFromJson(json);
 }

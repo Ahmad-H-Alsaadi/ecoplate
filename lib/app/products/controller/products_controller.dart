@@ -29,7 +29,6 @@ class ProductsController {
         throw Exception('A product with this name already exists');
       }
 
-      // Convert RecipeModel to the correct format for Firestore
       List<Map<String, dynamic>> recipeData = recipe.map((recipeItem) {
         return {
           'amount': recipeItem.amount,
@@ -41,7 +40,6 @@ class ProductsController {
         };
       }).toList();
 
-      // Create a new product
       Map<String, dynamic> productData = {
         'productName': productName,
         'recipe': recipeData,

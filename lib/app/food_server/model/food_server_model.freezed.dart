@@ -345,3 +345,330 @@ abstract class _FoodServerSelection implements FoodServerSelection {
   _$$FoodServerSelectionImplCopyWith<_$FoodServerSelectionImpl> get copyWith =>
       throw _privateConstructorUsedError;
 }
+
+FoodSurveyModel _$FoodSurveyModelFromJson(Map<String, dynamic> json) {
+  return _FoodSurveyModel.fromJson(json);
+}
+
+/// @nodoc
+mixin _$FoodSurveyModel {
+  String get productName => throw _privateConstructorUsedError;
+  String get quantityReceived => throw _privateConstructorUsedError;
+  String get quantityWasted => throw _privateConstructorUsedError;
+  List<String> get wasteReasons => throw _privateConstructorUsedError;
+  String get satisfactionLevel => throw _privateConstructorUsedError;
+  String? get otherProduct => throw _privateConstructorUsedError;
+  String? get otherWasteReason => throw _privateConstructorUsedError;
+  String? get improvementSuggestions => throw _privateConstructorUsedError;
+  DateTime get timestamp => throw _privateConstructorUsedError;
+
+  Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
+  @JsonKey(ignore: true)
+  $FoodSurveyModelCopyWith<FoodSurveyModel> get copyWith =>
+      throw _privateConstructorUsedError;
+}
+
+/// @nodoc
+abstract class $FoodSurveyModelCopyWith<$Res> {
+  factory $FoodSurveyModelCopyWith(
+          FoodSurveyModel value, $Res Function(FoodSurveyModel) then) =
+      _$FoodSurveyModelCopyWithImpl<$Res, FoodSurveyModel>;
+  @useResult
+  $Res call(
+      {String productName,
+      String quantityReceived,
+      String quantityWasted,
+      List<String> wasteReasons,
+      String satisfactionLevel,
+      String? otherProduct,
+      String? otherWasteReason,
+      String? improvementSuggestions,
+      DateTime timestamp});
+}
+
+/// @nodoc
+class _$FoodSurveyModelCopyWithImpl<$Res, $Val extends FoodSurveyModel>
+    implements $FoodSurveyModelCopyWith<$Res> {
+  _$FoodSurveyModelCopyWithImpl(this._value, this._then);
+
+  // ignore: unused_field
+  final $Val _value;
+  // ignore: unused_field
+  final $Res Function($Val) _then;
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? productName = null,
+    Object? quantityReceived = null,
+    Object? quantityWasted = null,
+    Object? wasteReasons = null,
+    Object? satisfactionLevel = null,
+    Object? otherProduct = freezed,
+    Object? otherWasteReason = freezed,
+    Object? improvementSuggestions = freezed,
+    Object? timestamp = null,
+  }) {
+    return _then(_value.copyWith(
+      productName: null == productName
+          ? _value.productName
+          : productName // ignore: cast_nullable_to_non_nullable
+              as String,
+      quantityReceived: null == quantityReceived
+          ? _value.quantityReceived
+          : quantityReceived // ignore: cast_nullable_to_non_nullable
+              as String,
+      quantityWasted: null == quantityWasted
+          ? _value.quantityWasted
+          : quantityWasted // ignore: cast_nullable_to_non_nullable
+              as String,
+      wasteReasons: null == wasteReasons
+          ? _value.wasteReasons
+          : wasteReasons // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      satisfactionLevel: null == satisfactionLevel
+          ? _value.satisfactionLevel
+          : satisfactionLevel // ignore: cast_nullable_to_non_nullable
+              as String,
+      otherProduct: freezed == otherProduct
+          ? _value.otherProduct
+          : otherProduct // ignore: cast_nullable_to_non_nullable
+              as String?,
+      otherWasteReason: freezed == otherWasteReason
+          ? _value.otherWasteReason
+          : otherWasteReason // ignore: cast_nullable_to_non_nullable
+              as String?,
+      improvementSuggestions: freezed == improvementSuggestions
+          ? _value.improvementSuggestions
+          : improvementSuggestions // ignore: cast_nullable_to_non_nullable
+              as String?,
+      timestamp: null == timestamp
+          ? _value.timestamp
+          : timestamp // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+    ) as $Val);
+  }
+}
+
+/// @nodoc
+abstract class _$$FoodSurveyModelImplCopyWith<$Res>
+    implements $FoodSurveyModelCopyWith<$Res> {
+  factory _$$FoodSurveyModelImplCopyWith(_$FoodSurveyModelImpl value,
+          $Res Function(_$FoodSurveyModelImpl) then) =
+      __$$FoodSurveyModelImplCopyWithImpl<$Res>;
+  @override
+  @useResult
+  $Res call(
+      {String productName,
+      String quantityReceived,
+      String quantityWasted,
+      List<String> wasteReasons,
+      String satisfactionLevel,
+      String? otherProduct,
+      String? otherWasteReason,
+      String? improvementSuggestions,
+      DateTime timestamp});
+}
+
+/// @nodoc
+class __$$FoodSurveyModelImplCopyWithImpl<$Res>
+    extends _$FoodSurveyModelCopyWithImpl<$Res, _$FoodSurveyModelImpl>
+    implements _$$FoodSurveyModelImplCopyWith<$Res> {
+  __$$FoodSurveyModelImplCopyWithImpl(
+      _$FoodSurveyModelImpl _value, $Res Function(_$FoodSurveyModelImpl) _then)
+      : super(_value, _then);
+
+  @pragma('vm:prefer-inline')
+  @override
+  $Res call({
+    Object? productName = null,
+    Object? quantityReceived = null,
+    Object? quantityWasted = null,
+    Object? wasteReasons = null,
+    Object? satisfactionLevel = null,
+    Object? otherProduct = freezed,
+    Object? otherWasteReason = freezed,
+    Object? improvementSuggestions = freezed,
+    Object? timestamp = null,
+  }) {
+    return _then(_$FoodSurveyModelImpl(
+      productName: null == productName
+          ? _value.productName
+          : productName // ignore: cast_nullable_to_non_nullable
+              as String,
+      quantityReceived: null == quantityReceived
+          ? _value.quantityReceived
+          : quantityReceived // ignore: cast_nullable_to_non_nullable
+              as String,
+      quantityWasted: null == quantityWasted
+          ? _value.quantityWasted
+          : quantityWasted // ignore: cast_nullable_to_non_nullable
+              as String,
+      wasteReasons: null == wasteReasons
+          ? _value._wasteReasons
+          : wasteReasons // ignore: cast_nullable_to_non_nullable
+              as List<String>,
+      satisfactionLevel: null == satisfactionLevel
+          ? _value.satisfactionLevel
+          : satisfactionLevel // ignore: cast_nullable_to_non_nullable
+              as String,
+      otherProduct: freezed == otherProduct
+          ? _value.otherProduct
+          : otherProduct // ignore: cast_nullable_to_non_nullable
+              as String?,
+      otherWasteReason: freezed == otherWasteReason
+          ? _value.otherWasteReason
+          : otherWasteReason // ignore: cast_nullable_to_non_nullable
+              as String?,
+      improvementSuggestions: freezed == improvementSuggestions
+          ? _value.improvementSuggestions
+          : improvementSuggestions // ignore: cast_nullable_to_non_nullable
+              as String?,
+      timestamp: null == timestamp
+          ? _value.timestamp
+          : timestamp // ignore: cast_nullable_to_non_nullable
+              as DateTime,
+    ));
+  }
+}
+
+/// @nodoc
+@JsonSerializable()
+class _$FoodSurveyModelImpl implements _FoodSurveyModel {
+  const _$FoodSurveyModelImpl(
+      {required this.productName,
+      required this.quantityReceived,
+      required this.quantityWasted,
+      required final List<String> wasteReasons,
+      required this.satisfactionLevel,
+      this.otherProduct,
+      this.otherWasteReason,
+      this.improvementSuggestions,
+      required this.timestamp})
+      : _wasteReasons = wasteReasons;
+
+  factory _$FoodSurveyModelImpl.fromJson(Map<String, dynamic> json) =>
+      _$$FoodSurveyModelImplFromJson(json);
+
+  @override
+  final String productName;
+  @override
+  final String quantityReceived;
+  @override
+  final String quantityWasted;
+  final List<String> _wasteReasons;
+  @override
+  List<String> get wasteReasons {
+    if (_wasteReasons is EqualUnmodifiableListView) return _wasteReasons;
+    // ignore: implicit_dynamic_type
+    return EqualUnmodifiableListView(_wasteReasons);
+  }
+
+  @override
+  final String satisfactionLevel;
+  @override
+  final String? otherProduct;
+  @override
+  final String? otherWasteReason;
+  @override
+  final String? improvementSuggestions;
+  @override
+  final DateTime timestamp;
+
+  @override
+  String toString() {
+    return 'FoodSurveyModel(productName: $productName, quantityReceived: $quantityReceived, quantityWasted: $quantityWasted, wasteReasons: $wasteReasons, satisfactionLevel: $satisfactionLevel, otherProduct: $otherProduct, otherWasteReason: $otherWasteReason, improvementSuggestions: $improvementSuggestions, timestamp: $timestamp)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$FoodSurveyModelImpl &&
+            (identical(other.productName, productName) ||
+                other.productName == productName) &&
+            (identical(other.quantityReceived, quantityReceived) ||
+                other.quantityReceived == quantityReceived) &&
+            (identical(other.quantityWasted, quantityWasted) ||
+                other.quantityWasted == quantityWasted) &&
+            const DeepCollectionEquality()
+                .equals(other._wasteReasons, _wasteReasons) &&
+            (identical(other.satisfactionLevel, satisfactionLevel) ||
+                other.satisfactionLevel == satisfactionLevel) &&
+            (identical(other.otherProduct, otherProduct) ||
+                other.otherProduct == otherProduct) &&
+            (identical(other.otherWasteReason, otherWasteReason) ||
+                other.otherWasteReason == otherWasteReason) &&
+            (identical(other.improvementSuggestions, improvementSuggestions) ||
+                other.improvementSuggestions == improvementSuggestions) &&
+            (identical(other.timestamp, timestamp) ||
+                other.timestamp == timestamp));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(
+      runtimeType,
+      productName,
+      quantityReceived,
+      quantityWasted,
+      const DeepCollectionEquality().hash(_wasteReasons),
+      satisfactionLevel,
+      otherProduct,
+      otherWasteReason,
+      improvementSuggestions,
+      timestamp);
+
+  @JsonKey(ignore: true)
+  @override
+  @pragma('vm:prefer-inline')
+  _$$FoodSurveyModelImplCopyWith<_$FoodSurveyModelImpl> get copyWith =>
+      __$$FoodSurveyModelImplCopyWithImpl<_$FoodSurveyModelImpl>(
+          this, _$identity);
+
+  @override
+  Map<String, dynamic> toJson() {
+    return _$$FoodSurveyModelImplToJson(
+      this,
+    );
+  }
+}
+
+abstract class _FoodSurveyModel implements FoodSurveyModel {
+  const factory _FoodSurveyModel(
+      {required final String productName,
+      required final String quantityReceived,
+      required final String quantityWasted,
+      required final List<String> wasteReasons,
+      required final String satisfactionLevel,
+      final String? otherProduct,
+      final String? otherWasteReason,
+      final String? improvementSuggestions,
+      required final DateTime timestamp}) = _$FoodSurveyModelImpl;
+
+  factory _FoodSurveyModel.fromJson(Map<String, dynamic> json) =
+      _$FoodSurveyModelImpl.fromJson;
+
+  @override
+  String get productName;
+  @override
+  String get quantityReceived;
+  @override
+  String get quantityWasted;
+  @override
+  List<String> get wasteReasons;
+  @override
+  String get satisfactionLevel;
+  @override
+  String? get otherProduct;
+  @override
+  String? get otherWasteReason;
+  @override
+  String? get improvementSuggestions;
+  @override
+  DateTime get timestamp;
+  @override
+  @JsonKey(ignore: true)
+  _$$FoodSurveyModelImplCopyWith<_$FoodSurveyModelImpl> get copyWith =>
+      throw _privateConstructorUsedError;
+}

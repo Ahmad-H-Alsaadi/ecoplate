@@ -50,14 +50,26 @@ class _ProductsViewState extends State<ProductsView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildTextField(_productNameController, 'Product Name'),
-                SizedBox(height: Sizes.mediumSize),
-                Text('Recipe Items:', style: TextStyles.heading2),
-                SizedBox(height: Sizes.smallSize),
+                const SizedBox(height: Sizes.mediumSize),
+                const Text('Recipe Items:', style: TextStyles.heading2),
+                const SizedBox(height: Sizes.smallSize),
                 ..._recipe.map(_buildRecipeItem),
-                SizedBox(height: Sizes.mediumSize),
-                _buildButton('Add Recipe Item', _showItemSelectionDialog),
-                SizedBox(height: Sizes.mediumSize),
-                _buildButton('Create Product', _createProduct),
+                const SizedBox(height: Sizes.mediumSize),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildButton('Add Recipe Item', _showItemSelectionDialog),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: Sizes.mediumSize),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _buildButton('Create Product', _createProduct),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
@@ -71,7 +83,7 @@ class _ProductsViewState extends State<ProductsView> {
       controller: controller,
       decoration: InputDecoration(
         labelText: label,
-        border: OutlineInputBorder(borderRadius: Borders.smallBorderRadius),
+        border: const OutlineInputBorder(borderRadius: Borders.smallBorderRadius),
         filled: true,
         fillColor: ColorConstants.kCardBackground,
       ),
@@ -83,12 +95,12 @@ class _ProductsViewState extends State<ProductsView> {
   Widget _buildRecipeItem(RecipeModel item) {
     return Card(
       margin: Insets.smallPadding,
-      shape: RoundedRectangleBorder(borderRadius: Borders.smallBorderRadius),
+      shape: const RoundedRectangleBorder(borderRadius: Borders.smallBorderRadius),
       child: ListTile(
         title: Text(item.item.itemName, style: TextStyles.bodyText1),
         subtitle: Text('Amount: ${item.amount} ${item.item.measurement}', style: TextStyles.bodyText2),
         trailing: IconButton(
-          icon: Icon(Icons.delete, color: ColorConstants.kErrorColor),
+          icon: const Icon(Icons.delete, color: ColorConstants.kErrorColor),
           onPressed: () {
             setState(() {
               _recipe.remove(item);
@@ -105,7 +117,7 @@ class _ProductsViewState extends State<ProductsView> {
       style: ElevatedButton.styleFrom(
         backgroundColor: ColorConstants.kPrimaryColor,
         padding: Insets.mediumPadding,
-        shape: RoundedRectangleBorder(borderRadius: Borders.smallBorderRadius),
+        shape: const RoundedRectangleBorder(borderRadius: Borders.smallBorderRadius),
       ),
       child: Text(text, style: TextStyles.buttonText),
     );
@@ -184,7 +196,7 @@ class _ProductsViewState extends State<ProductsView> {
         content: Text(message, style: TextStyles.bodyText2.copyWith(color: ColorConstants.kWhite)),
         backgroundColor: isError ? ColorConstants.kErrorColor : ColorConstants.kAccentColor,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: Borders.smallBorderRadius),
+        shape: const RoundedRectangleBorder(borderRadius: Borders.smallBorderRadius),
       ),
     );
   }
@@ -198,7 +210,7 @@ class ItemSelectionDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Select an Item', style: TextStyles.heading2),
+      title: const Text('Select an Item', style: TextStyles.heading2),
       content: SizedBox(
         width: double.maxFinite,
         height: 300,
@@ -210,15 +222,15 @@ class ItemSelectionDialog extends StatelessWidget {
               .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.hasError) {
-              return Text('Something went wrong', style: TextStyles.bodyText1);
+              return const Text('Something went wrong', style: TextStyles.bodyText1);
             }
 
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(child: CircularProgressIndicator(color: ColorConstants.kPrimaryColor));
+              return const Center(child: CircularProgressIndicator(color: ColorConstants.kPrimaryColor));
             }
 
             if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-              return Text('No items found', style: TextStyles.bodyText1);
+              return const Text('No items found', style: TextStyles.bodyText1);
             }
 
             return ListView.builder(
@@ -263,7 +275,7 @@ class _SetAmountDialogState extends State<SetAmountDialog> {
           controller: _amountController,
           decoration: InputDecoration(
             labelText: 'Amount (${widget.item.measurement})',
-            border: OutlineInputBorder(borderRadius: Borders.smallBorderRadius),
+            border: const OutlineInputBorder(borderRadius: Borders.smallBorderRadius),
             filled: true,
             fillColor: ColorConstants.kCardBackground,
           ),
@@ -293,9 +305,9 @@ class _SetAmountDialogState extends State<SetAmountDialog> {
           },
           style: ElevatedButton.styleFrom(
             backgroundColor: ColorConstants.kPrimaryColor,
-            shape: RoundedRectangleBorder(borderRadius: Borders.smallBorderRadius),
+            shape: const RoundedRectangleBorder(borderRadius: Borders.smallBorderRadius),
           ),
-          child: Text('Set', style: TextStyles.buttonText),
+          child: const Text('Set', style: TextStyles.buttonText),
         ),
       ],
     );

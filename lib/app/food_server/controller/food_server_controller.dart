@@ -59,12 +59,10 @@ class FoodServerController {
 
       print('Order document prepared for batch commit');
 
-      // Fetch all stock items for the user
       QuerySnapshot allStockSnapshot = await _firestore.collection('users').doc(user.uid).collection('stock').get();
 
       List<StockModel> allStockItems = allStockSnapshot.docs.map((doc) => StockModel.fromFirestore(doc)).toList();
 
-      // Update stock
       for (var product in selections) {
         print('Processing selection: ${product.productName}');
         int quantity = quantities[product.productName] ?? 0;
@@ -75,7 +73,6 @@ class FoodServerController {
 
           print('Total amount needed: $totalAmountNeeded');
 
-          // Filter and sort stock items in memory
           List<StockModel> relevantStock = allStockItems
               .where((stock) => stock.item.itemName == recipeItem.item.itemName)
               .toList()
