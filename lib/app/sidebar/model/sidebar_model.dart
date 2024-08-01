@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 class SidebarModel {
   final IconData icon;
   final String title;
-  final String routeName; // Instead of a callback, we'll use route names
+  final String routeName;
 
   SidebarModel({
     required this.icon,
@@ -44,11 +44,6 @@ class SidebarData {
       icon: IconConstants.kFoodServer,
       title: 'Food Server',
       routeName: '/food_server',
-    ),
-    SidebarModel(
-      icon: IconConstants.kWallet,
-      title: 'Wallet',
-      routeName: '/wallet',
     ),
     SidebarModel(
       icon: IconConstants.kStock,

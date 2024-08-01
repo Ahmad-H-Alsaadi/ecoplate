@@ -1,5 +1,3 @@
-// lib/app/security_cameras/controller/detect_food_waste_controller.dart
-
 import 'package:camera/camera.dart';
 import 'package:ecoplate/core/controllers/navigation_controller.dart';
 import 'package:flutter/material.dart';
@@ -19,10 +17,6 @@ class DetectFoodWasteController {
     }
   }
 
-  void navigateToSecurityCameras(BuildContext context) {
-    navigationController.navigateTo('/security_cameras');
-  }
-
   void navigateToPhoneCamera(BuildContext context) {
     if (cameraController != null && cameraController!.value.isInitialized) {
       navigationController.navigateTo('/camera', arguments: {'controller': cameraController});
@@ -31,6 +25,10 @@ class DetectFoodWasteController {
         const SnackBar(content: Text('Camera not initialized')),
       );
     }
+  }
+
+  void navigateToFoodSurvey(BuildContext context) {
+    navigationController.navigateTo('/food_survey');
   }
 
   void dispose() {

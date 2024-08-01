@@ -11,7 +11,6 @@ class ProductsModel with _$ProductsModel {
   const ProductsModel._();
 
   const factory ProductsModel({
-    required String productId,
     required String productName,
     required List<RecipeModel> recipe,
   }) = _ProductsModel;
@@ -19,17 +18,17 @@ class ProductsModel with _$ProductsModel {
   factory ProductsModel.fromJson(Map<String, dynamic> json) => _$ProductsModelFromJson(json);
 
   factory ProductsModel.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>? ?? {};
     return ProductsModel(
-      productId: doc.id,
-      productName: data['productName'] as String,
-      recipe: (data['recipe'] as List<dynamic>).map((e) => RecipeModel.fromJson(e as Map<String, dynamic>)).toList(),
+      productName: data['productName'] as String? ?? '',
+      recipe: (data['recipe'] as List<dynamic>?)
+              ?.map((item) => RecipeModel.fromJson(item as Map<String, dynamic>? ?? {}))
+              .toList() ??
+          [],
     );
   }
 
   Map<String, dynamic> toFirestore() {
-    return toJson()
-      ..remove('productId')
-      ..['recipe'] = recipe.map((e) => e.toFirestore()).toList();
+    return toJson()..['recipe'] = recipe.map((e) => e.toJson()).toList();
   }
 }

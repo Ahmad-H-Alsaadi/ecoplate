@@ -44,7 +44,7 @@ class AccountController extends ChangeNotifier {
       _account = AccountModel(
         name: nameController.text,
         email: emailController.text,
-        password: '', // We don't update the password here
+        password: '',
       );
       User? user = _auth.currentUser;
       if (user != null) {

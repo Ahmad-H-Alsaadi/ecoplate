@@ -20,9 +20,8 @@ RecipeModel _$RecipeModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$RecipeModel {
-  String get productId => throw _privateConstructorUsedError;
-  ItemsModel get item => throw _privateConstructorUsedError;
   double get amount => throw _privateConstructorUsedError;
+  ItemsModel get item => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -36,7 +35,7 @@ abstract class $RecipeModelCopyWith<$Res> {
           RecipeModel value, $Res Function(RecipeModel) then) =
       _$RecipeModelCopyWithImpl<$Res, RecipeModel>;
   @useResult
-  $Res call({String productId, ItemsModel item, double amount});
+  $Res call({double amount, ItemsModel item});
 
   $ItemsModelCopyWith<$Res> get item;
 }
@@ -54,23 +53,18 @@ class _$RecipeModelCopyWithImpl<$Res, $Val extends RecipeModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? productId = null,
-    Object? item = null,
     Object? amount = null,
+    Object? item = null,
   }) {
     return _then(_value.copyWith(
-      productId: null == productId
-          ? _value.productId
-          : productId // ignore: cast_nullable_to_non_nullable
-              as String,
-      item: null == item
-          ? _value.item
-          : item // ignore: cast_nullable_to_non_nullable
-              as ItemsModel,
       amount: null == amount
           ? _value.amount
           : amount // ignore: cast_nullable_to_non_nullable
               as double,
+      item: null == item
+          ? _value.item
+          : item // ignore: cast_nullable_to_non_nullable
+              as ItemsModel,
     ) as $Val);
   }
 
@@ -91,7 +85,7 @@ abstract class _$$RecipeModelImplCopyWith<$Res>
       __$$RecipeModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String productId, ItemsModel item, double amount});
+  $Res call({double amount, ItemsModel item});
 
   @override
   $ItemsModelCopyWith<$Res> get item;
@@ -108,23 +102,18 @@ class __$$RecipeModelImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? productId = null,
-    Object? item = null,
     Object? amount = null,
+    Object? item = null,
   }) {
     return _then(_$RecipeModelImpl(
-      productId: null == productId
-          ? _value.productId
-          : productId // ignore: cast_nullable_to_non_nullable
-              as String,
-      item: null == item
-          ? _value.item
-          : item // ignore: cast_nullable_to_non_nullable
-              as ItemsModel,
       amount: null == amount
           ? _value.amount
           : amount // ignore: cast_nullable_to_non_nullable
               as double,
+      item: null == item
+          ? _value.item
+          : item // ignore: cast_nullable_to_non_nullable
+              as ItemsModel,
     ));
   }
 }
@@ -132,23 +121,20 @@ class __$$RecipeModelImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$RecipeModelImpl extends _RecipeModel {
-  const _$RecipeModelImpl(
-      {required this.productId, required this.item, required this.amount})
+  const _$RecipeModelImpl({required this.amount, required this.item})
       : super._();
 
   factory _$RecipeModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$RecipeModelImplFromJson(json);
 
   @override
-  final String productId;
+  final double amount;
   @override
   final ItemsModel item;
-  @override
-  final double amount;
 
   @override
   String toString() {
-    return 'RecipeModel(productId: $productId, item: $item, amount: $amount)';
+    return 'RecipeModel(amount: $amount, item: $item)';
   }
 
   @override
@@ -156,15 +142,13 @@ class _$RecipeModelImpl extends _RecipeModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$RecipeModelImpl &&
-            (identical(other.productId, productId) ||
-                other.productId == productId) &&
-            (identical(other.item, item) || other.item == item) &&
-            (identical(other.amount, amount) || other.amount == amount));
+            (identical(other.amount, amount) || other.amount == amount) &&
+            (identical(other.item, item) || other.item == item));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, productId, item, amount);
+  int get hashCode => Object.hash(runtimeType, amount, item);
 
   @JsonKey(ignore: true)
   @override
@@ -182,20 +166,17 @@ class _$RecipeModelImpl extends _RecipeModel {
 
 abstract class _RecipeModel extends RecipeModel {
   const factory _RecipeModel(
-      {required final String productId,
-      required final ItemsModel item,
-      required final double amount}) = _$RecipeModelImpl;
+      {required final double amount,
+      required final ItemsModel item}) = _$RecipeModelImpl;
   const _RecipeModel._() : super._();
 
   factory _RecipeModel.fromJson(Map<String, dynamic> json) =
       _$RecipeModelImpl.fromJson;
 
   @override
-  String get productId;
+  double get amount;
   @override
   ItemsModel get item;
-  @override
-  double get amount;
   @override
   @JsonKey(ignore: true)
   _$$RecipeModelImplCopyWith<_$RecipeModelImpl> get copyWith =>

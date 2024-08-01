@@ -20,7 +20,6 @@ ProductsModel _$ProductsModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$ProductsModel {
-  String get productId => throw _privateConstructorUsedError;
   String get productName => throw _privateConstructorUsedError;
   List<RecipeModel> get recipe => throw _privateConstructorUsedError;
 
@@ -36,7 +35,7 @@ abstract class $ProductsModelCopyWith<$Res> {
           ProductsModel value, $Res Function(ProductsModel) then) =
       _$ProductsModelCopyWithImpl<$Res, ProductsModel>;
   @useResult
-  $Res call({String productId, String productName, List<RecipeModel> recipe});
+  $Res call({String productName, List<RecipeModel> recipe});
 }
 
 /// @nodoc
@@ -52,15 +51,10 @@ class _$ProductsModelCopyWithImpl<$Res, $Val extends ProductsModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? productId = null,
     Object? productName = null,
     Object? recipe = null,
   }) {
     return _then(_value.copyWith(
-      productId: null == productId
-          ? _value.productId
-          : productId // ignore: cast_nullable_to_non_nullable
-              as String,
       productName: null == productName
           ? _value.productName
           : productName // ignore: cast_nullable_to_non_nullable
@@ -81,7 +75,7 @@ abstract class _$$ProductsModelImplCopyWith<$Res>
       __$$ProductsModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String productId, String productName, List<RecipeModel> recipe});
+  $Res call({String productName, List<RecipeModel> recipe});
 }
 
 /// @nodoc
@@ -95,15 +89,10 @@ class __$$ProductsModelImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? productId = null,
     Object? productName = null,
     Object? recipe = null,
   }) {
     return _then(_$ProductsModelImpl(
-      productId: null == productId
-          ? _value.productId
-          : productId // ignore: cast_nullable_to_non_nullable
-              as String,
       productName: null == productName
           ? _value.productName
           : productName // ignore: cast_nullable_to_non_nullable
@@ -120,17 +109,13 @@ class __$$ProductsModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$ProductsModelImpl extends _ProductsModel {
   const _$ProductsModelImpl(
-      {required this.productId,
-      required this.productName,
-      required final List<RecipeModel> recipe})
+      {required this.productName, required final List<RecipeModel> recipe})
       : _recipe = recipe,
         super._();
 
   factory _$ProductsModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$ProductsModelImplFromJson(json);
 
-  @override
-  final String productId;
   @override
   final String productName;
   final List<RecipeModel> _recipe;
@@ -143,7 +128,7 @@ class _$ProductsModelImpl extends _ProductsModel {
 
   @override
   String toString() {
-    return 'ProductsModel(productId: $productId, productName: $productName, recipe: $recipe)';
+    return 'ProductsModel(productName: $productName, recipe: $recipe)';
   }
 
   @override
@@ -151,8 +136,6 @@ class _$ProductsModelImpl extends _ProductsModel {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$ProductsModelImpl &&
-            (identical(other.productId, productId) ||
-                other.productId == productId) &&
             (identical(other.productName, productName) ||
                 other.productName == productName) &&
             const DeepCollectionEquality().equals(other._recipe, _recipe));
@@ -160,8 +143,8 @@ class _$ProductsModelImpl extends _ProductsModel {
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, productId, productName,
-      const DeepCollectionEquality().hash(_recipe));
+  int get hashCode => Object.hash(
+      runtimeType, productName, const DeepCollectionEquality().hash(_recipe));
 
   @JsonKey(ignore: true)
   @override
@@ -179,16 +162,13 @@ class _$ProductsModelImpl extends _ProductsModel {
 
 abstract class _ProductsModel extends ProductsModel {
   const factory _ProductsModel(
-      {required final String productId,
-      required final String productName,
+      {required final String productName,
       required final List<RecipeModel> recipe}) = _$ProductsModelImpl;
   const _ProductsModel._() : super._();
 
   factory _ProductsModel.fromJson(Map<String, dynamic> json) =
       _$ProductsModelImpl.fromJson;
 
-  @override
-  String get productId;
   @override
   String get productName;
   @override

@@ -9,25 +9,25 @@ class ItemsModel with _$ItemsModel {
   const ItemsModel._();
 
   const factory ItemsModel({
-    required String id,
-    required String vatNumber,
+    String? id,
     required String itemName,
     required String measurement,
+    @Default('') String vatNumber,
   }) = _ItemsModel;
 
   factory ItemsModel.fromJson(Map<String, dynamic> json) => _$ItemsModelFromJson(json);
 
   factory ItemsModel.fromFirestore(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data() as Map<String, dynamic>? ?? {};
     return ItemsModel(
       id: doc.id,
-      vatNumber: data['vatNumber'] as String,
-      itemName: data['itemName'] as String,
-      measurement: data['measurement'] as String,
+      itemName: data['itemName'] as String? ?? '',
+      measurement: data['measurement'] as String? ?? '',
+      vatNumber: data['vatNumber'] as String? ?? '',
     );
   }
 
   Map<String, dynamic> toFirestore() {
-    return toJson()..remove('id');
+    return toJson()..removeWhere((key, value) => value == null);
   }
 }

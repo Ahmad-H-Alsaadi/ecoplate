@@ -8,14 +8,12 @@ part of 'recipe_model.dart';
 
 _$RecipeModelImpl _$$RecipeModelImplFromJson(Map<String, dynamic> json) =>
     _$RecipeModelImpl(
-      productId: json['productId'] as String,
-      item: ItemsModel.fromJson(json['item'] as Map<String, dynamic>),
       amount: (json['amount'] as num).toDouble(),
+      item: ItemsModel.fromJson(json['item'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$$RecipeModelImplToJson(_$RecipeModelImpl instance) =>
     <String, dynamic>{
-      'productId': instance.productId,
-      'item': instance.item,
       'amount': instance.amount,
+      'item': instance.item,
     };
