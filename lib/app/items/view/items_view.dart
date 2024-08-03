@@ -192,7 +192,7 @@ class _AddItemDialogState extends State<AddItemDialog> {
   void _submitForm() {
     if (_formKey.currentState!.validate()) {
       final newItem = ItemsModel(
-        id: '', // Firestore will generate this
+        id: '',
         vatNumber: _vatNumberController.text,
         itemName: _itemNameController.text,
         measurement: _measurementController.text,

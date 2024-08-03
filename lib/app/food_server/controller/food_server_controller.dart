@@ -11,7 +11,11 @@ class FoodServerController {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  FoodServerController(this.navigationController);
+  FoodServerController(
+    this.navigationController, {
+    FirebaseFirestore? firestore,
+    FirebaseAuth? auth,
+  });
 
   Stream<List<ProductsModel>> getAllProducts() {
     User? user = _auth.currentUser;
@@ -45,7 +49,6 @@ class FoodServerController {
 
       final batch = _firestore.batch();
 
-      // Save the order
       DocumentReference orderRef = _firestore.collection('users').doc(user.uid).collection('orders').doc();
       batch.set(orderRef, {
         'createdAt': FieldValue.serverTimestamp(),
@@ -57,28 +60,28 @@ class FoodServerController {
             .toList(),
       });
 
-      print('Order document prepared for batch commit');
+      print('order document prepared for batch commit');
 
       QuerySnapshot allStockSnapshot = await _firestore.collection('users').doc(user.uid).collection('stock').get();
 
       List<StockModel> allStockItems = allStockSnapshot.docs.map((doc) => StockModel.fromFirestore(doc)).toList();
 
       for (var product in selections) {
-        print('Processing selection: ${product.productName}');
+        print('processing selection: ${product.productName}');
         int quantity = quantities[product.productName] ?? 0;
 
         for (var recipeItem in product.recipe) {
-          print('Processing recipe item: ${recipeItem.item.itemName}');
+          print('processing recipe item: ${recipeItem.item.itemName}');
           double totalAmountNeeded = recipeItem.amount * quantity;
 
-          print('Total amount needed: $totalAmountNeeded');
+          print('total amount needed: $totalAmountNeeded');
 
           List<StockModel> relevantStock = allStockItems
               .where((stock) => stock.item.itemName == recipeItem.item.itemName)
               .toList()
             ..sort((a, b) => a.expireDate.compareTo(b.expireDate));
 
-          print('Relevant stock items: ${relevantStock.length}');
+          print('relevant stock items: ${relevantStock.length}');
 
           double remainingAmountNeeded = totalAmountNeeded;
 
@@ -88,22 +91,22 @@ class FoodServerController {
             double amountToReduce = min(stock.amount, remainingAmountNeeded);
             remainingAmountNeeded -= amountToReduce;
 
-            print('Updating stock: ${stock.id}, current amount: ${stock.amount}, reducing by: $amountToReduce');
+            print('updating stock: ${stock.id}, current amount: ${stock.amount}, reducing by: $amountToReduce');
 
             if (stock.amount - amountToReduce <= 0.001) {
               batch.delete(_firestore.collection('users').doc(user.uid).collection('stock').doc(stock.id));
-              print('Deleting stock item: ${stock.id}');
+              print('deleting stock item: ${stock.id}');
             } else {
               batch.update(_firestore.collection('users').doc(user.uid).collection('stock').doc(stock.id), {
                 'amount': FieldValue.increment(-amountToReduce),
               });
-              print('Updating stock item: ${stock.id}, new amount: ${stock.amount - amountToReduce}');
+              print('updating stock item: ${stock.id}, new amount: ${stock.amount - amountToReduce}');
             }
           }
 
           if (remainingAmountNeeded > 0.001) {
             print(
-                'Warning: Not enough stock for ${recipeItem.item.itemName}. Needed: $totalAmountNeeded, Available: ${totalAmountNeeded - remainingAmountNeeded}');
+                'warning: Not enough stock for ${recipeItem.item.itemName}. needed: $totalAmountNeeded, available: ${totalAmountNeeded - remainingAmountNeeded}');
           }
         }
       }

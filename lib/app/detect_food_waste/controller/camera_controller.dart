@@ -47,7 +47,7 @@ class CameraController {
       final base64Image = base64Encode(bytes);
       print("Image size: ${bytes.length} bytes");
       final response = await http.post(
-        Uri.parse('http://192.168.3.31:5000/detect'),
+        Uri.parse('http://192.168.37.36:5000/detect'),
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({'image': base64Image}),
       );
@@ -56,7 +56,7 @@ class CameraController {
         print("Raw server response: $result");
         detectionResult = 'Food Waste: ${result['waste_percentage'].toStringAsFixed(2)}%';
         boxes = List<Map<String, dynamic>>.from(result['detections']);
-        print("Boxes: $boxes"); // Add this line
+        print("Boxes: $boxes");
       } else {
         print("Server error: ${response.statusCode} - ${response.body}");
         detectionResult = 'Server Error: ${response.body}';

@@ -2,6 +2,7 @@ import 'package:ecoplate/app/detect_food_waste/controller/detect_food_waste_cont
 import 'package:ecoplate/core/constants/assets.dart';
 import 'package:ecoplate/core/constants/color_constants.dart';
 import 'package:ecoplate/core/constants/decorations.dart';
+import 'package:ecoplate/core/constants/icon_constants.dart';
 import 'package:ecoplate/core/controllers/navigation_controller.dart';
 import 'package:ecoplate/core/views/base_view.dart';
 import 'package:flutter/material.dart';
@@ -46,13 +47,13 @@ class _DetectFoodWasteViewState extends State<DetectFoodWasteView> {
             ),
             const SizedBox(height: Sizes.largeSize),
             _buildButton(
-              icon: Icons.camera_alt,
+              icon: IconConstants.kCamera,
               title: "Phone Camera",
               onTap: () => controller.navigateToPhoneCamera(context),
             ),
             const SizedBox(height: Sizes.mediumSize),
             _buildButton(
-              icon: Icons.assignment,
+              icon: IconConstants.kSurvey,
               title: "Food Survey",
               onTap: () => controller.navigateToFoodSurvey(context),
             ),

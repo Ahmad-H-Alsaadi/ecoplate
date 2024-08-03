@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecoplate/app/detect_food_waste/model/detect_food_waste_model.dart';
 import 'package:ecoplate/app/detect_food_waste/model/food_survey_model.dart';
 import 'package:ecoplate/app/products/model/products_model.dart';
-import 'package:ecoplate/app/purchases/model/purchases_model.dart';
 import 'package:ecoplate/app/stock/model/stock_model.dart';
 import 'package:ecoplate/core/controllers/navigation_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -40,17 +39,11 @@ class DashboardController {
         .map((snapshot) => snapshot.docs.map((doc) => StockModel.fromFirestore(doc)).toList());
   }
 
-  Stream<List<PurchasesModel>> getPurchasesStream() {
-    String userId = _auth.currentUser!.uid;
-    return _firestore
-        .collection('users')
-        .doc(userId)
-        .collection('purchases')
-        .orderBy('dateTime', descending: true)
-        .limit(10)
-        .snapshots()
-        .map((snapshot) {
-      return snapshot.docs.map((doc) => PurchasesModel.fromFirestore(doc)).toList();
+  Stream<double> getAverageFoodWaste() {
+    return getFoodWasteStream().map((foodWasteList) {
+      if (foodWasteList.isEmpty) return 0.0;
+      double sum = foodWasteList.fold(0, (sum, item) => sum + item.wastePercentage);
+      return sum / foodWasteList.length;
     });
   }
 
@@ -78,5 +71,17 @@ class DashboardController {
 
   void navigateToFoodSurvey() {
     navigationController.navigateTo('/food_survey');
+  }
+
+  // New methods
+
+  Stream<int> getLowStockItemsCount() {
+    return getStockStream().map((stockList) {
+      return stockList.where((item) => item.amount < 10).length;
+    });
+  }
+
+  Stream<int> getTotalProductsCount() {
+    return getProductsStream().map((productsList) => productsList.length);
   }
 }

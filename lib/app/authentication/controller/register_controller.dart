@@ -13,19 +13,16 @@ class RegisterController {
     try {
       print("Attempting to create user with email: $email");
 
-      // Create user in Firebase Auth
       UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
 
-      // Get the newly created user
       User? user = userCredential.user;
 
       if (user != null) {
         print("User created successfully with UID: ${user.uid}");
 
-        // Save additional user data to Firestore
         await _saveUserDataToFirestore(user: user, name: name);
       } else {
         throw Exception("User creation successful but user data is missing");

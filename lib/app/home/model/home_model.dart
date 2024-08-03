@@ -27,7 +27,7 @@ class HomeData {
     ),
     HomeModel(
       icon: IconConstants.kStock,
-      title: "Manage Stock",
+      title: "Stock",
       route: '/stock',
     ),
     HomeModel(
@@ -39,6 +39,11 @@ class HomeData {
       icon: IconConstants.kFoodServer,
       title: "Food Server",
       route: '/food_server',
+    ),
+    HomeModel(
+      icon: IconConstants.kSurvey,
+      title: "Survey",
+      route: '/food_survey',
     ),
   ];
 }

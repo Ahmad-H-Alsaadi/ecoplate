@@ -13,4 +13,6 @@ class IconConstants {
   static const IconData kProducts = Icons.shopping_cart_rounded;
   static const IconData kFoodServer = Icons.local_dining_rounded;
   static const IconData kWallet = Icons.account_balance_wallet;
+  static const IconData kSurvey = Icons.assignment;
+  static const IconData kCamera = Icons.camera_alt;
 }

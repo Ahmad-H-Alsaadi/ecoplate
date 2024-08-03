@@ -56,6 +56,11 @@ class SidebarData {
       routeName: '/detect_food_waste',
     ),
     SidebarModel(
+      icon: IconConstants.kSurvey,
+      title: 'Survey',
+      routeName: '/food_survey',
+    ),
+    SidebarModel(
       icon: IconConstants.kLogout,
       title: 'Log out',
       routeName: '/logout',
