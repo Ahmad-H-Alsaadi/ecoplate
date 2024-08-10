@@ -21,7 +21,6 @@ class LoginController {
       });
       navigationController.navigateTo('/home');
     } catch (e) {
-      // Handle login errors
       setState(() {
         errorEmail = 'An unknown error occurred';
         errorPassword = '';

@@ -20,10 +20,10 @@ ItemsModel _$ItemsModelFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$ItemsModel {
-  String get id => throw _privateConstructorUsedError;
-  String get vatNumber => throw _privateConstructorUsedError;
+  String? get id => throw _privateConstructorUsedError;
   String get itemName => throw _privateConstructorUsedError;
   String get measurement => throw _privateConstructorUsedError;
+  String get vatNumber => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -37,7 +37,8 @@ abstract class $ItemsModelCopyWith<$Res> {
           ItemsModel value, $Res Function(ItemsModel) then) =
       _$ItemsModelCopyWithImpl<$Res, ItemsModel>;
   @useResult
-  $Res call({String id, String vatNumber, String itemName, String measurement});
+  $Res call(
+      {String? id, String itemName, String measurement, String vatNumber});
 }
 
 /// @nodoc
@@ -53,20 +54,16 @@ class _$ItemsModelCopyWithImpl<$Res, $Val extends ItemsModel>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
-    Object? vatNumber = null,
+    Object? id = freezed,
     Object? itemName = null,
     Object? measurement = null,
+    Object? vatNumber = null,
   }) {
     return _then(_value.copyWith(
-      id: null == id
+      id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      vatNumber: null == vatNumber
-          ? _value.vatNumber
-          : vatNumber // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       itemName: null == itemName
           ? _value.itemName
           : itemName // ignore: cast_nullable_to_non_nullable
@@ -74,6 +71,10 @@ class _$ItemsModelCopyWithImpl<$Res, $Val extends ItemsModel>
       measurement: null == measurement
           ? _value.measurement
           : measurement // ignore: cast_nullable_to_non_nullable
+              as String,
+      vatNumber: null == vatNumber
+          ? _value.vatNumber
+          : vatNumber // ignore: cast_nullable_to_non_nullable
               as String,
     ) as $Val);
   }
@@ -87,7 +88,8 @@ abstract class _$$ItemsModelImplCopyWith<$Res>
       __$$ItemsModelImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String id, String vatNumber, String itemName, String measurement});
+  $Res call(
+      {String? id, String itemName, String measurement, String vatNumber});
 }
 
 /// @nodoc
@@ -101,20 +103,16 @@ class __$$ItemsModelImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? id = null,
-    Object? vatNumber = null,
+    Object? id = freezed,
     Object? itemName = null,
     Object? measurement = null,
+    Object? vatNumber = null,
   }) {
     return _then(_$ItemsModelImpl(
-      id: null == id
+      id: freezed == id
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
-              as String,
-      vatNumber: null == vatNumber
-          ? _value.vatNumber
-          : vatNumber // ignore: cast_nullable_to_non_nullable
-              as String,
+              as String?,
       itemName: null == itemName
           ? _value.itemName
           : itemName // ignore: cast_nullable_to_non_nullable
@@ -122,6 +120,10 @@ class __$$ItemsModelImplCopyWithImpl<$Res>
       measurement: null == measurement
           ? _value.measurement
           : measurement // ignore: cast_nullable_to_non_nullable
+              as String,
+      vatNumber: null == vatNumber
+          ? _value.vatNumber
+          : vatNumber // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -131,27 +133,28 @@ class __$$ItemsModelImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$ItemsModelImpl extends _ItemsModel {
   const _$ItemsModelImpl(
-      {required this.id,
-      required this.vatNumber,
+      {this.id,
       required this.itemName,
-      required this.measurement})
+      required this.measurement,
+      this.vatNumber = ''})
       : super._();
 
   factory _$ItemsModelImpl.fromJson(Map<String, dynamic> json) =>
       _$$ItemsModelImplFromJson(json);
 
   @override
-  final String id;
-  @override
-  final String vatNumber;
+  final String? id;
   @override
   final String itemName;
   @override
   final String measurement;
+  @override
+  @JsonKey()
+  final String vatNumber;
 
   @override
   String toString() {
-    return 'ItemsModel(id: $id, vatNumber: $vatNumber, itemName: $itemName, measurement: $measurement)';
+    return 'ItemsModel(id: $id, itemName: $itemName, measurement: $measurement, vatNumber: $vatNumber)';
   }
 
   @override
@@ -160,18 +163,18 @@ class _$ItemsModelImpl extends _ItemsModel {
         (other.runtimeType == runtimeType &&
             other is _$ItemsModelImpl &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.vatNumber, vatNumber) ||
-                other.vatNumber == vatNumber) &&
             (identical(other.itemName, itemName) ||
                 other.itemName == itemName) &&
             (identical(other.measurement, measurement) ||
-                other.measurement == measurement));
+                other.measurement == measurement) &&
+            (identical(other.vatNumber, vatNumber) ||
+                other.vatNumber == vatNumber));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode =>
-      Object.hash(runtimeType, id, vatNumber, itemName, measurement);
+      Object.hash(runtimeType, id, itemName, measurement, vatNumber);
 
   @JsonKey(ignore: true)
   @override
@@ -189,23 +192,23 @@ class _$ItemsModelImpl extends _ItemsModel {
 
 abstract class _ItemsModel extends ItemsModel {
   const factory _ItemsModel(
-      {required final String id,
-      required final String vatNumber,
+      {final String? id,
       required final String itemName,
-      required final String measurement}) = _$ItemsModelImpl;
+      required final String measurement,
+      final String vatNumber}) = _$ItemsModelImpl;
   const _ItemsModel._() : super._();
 
   factory _ItemsModel.fromJson(Map<String, dynamic> json) =
       _$ItemsModelImpl.fromJson;
 
   @override
-  String get id;
-  @override
-  String get vatNumber;
+  String? get id;
   @override
   String get itemName;
   @override
   String get measurement;
+  @override
+  String get vatNumber;
   @override
   @JsonKey(ignore: true)
   _$$ItemsModelImplCopyWith<_$ItemsModelImpl> get copyWith =>

@@ -1,4 +1,4 @@
-// home_model.dart
+import 'package:ecoplate/core/constants/icon_constants.dart';
 import 'package:flutter/material.dart';
 
 class HomeModel {
@@ -16,24 +16,34 @@ class HomeModel {
 class HomeData {
   static List<HomeModel> items = [
     HomeModel(
-      icon: Icons.dashboard,
+      icon: IconConstants.kDashboard,
       title: "Dashboard",
       route: '/dashboard',
     ),
     HomeModel(
-      icon: Icons.no_food,
+      icon: IconConstants.kDetectFoodWaste,
       title: "Detect Food Waste",
       route: '/detect_food_waste',
     ),
     HomeModel(
-      icon: Icons.store,
+      icon: IconConstants.kStock,
       title: "Stock",
       route: '/stock',
     ),
     HomeModel(
-      icon: Icons.qr_code_2,
+      icon: IconConstants.kPurchases,
       title: "Scan Purchases",
       route: '/purchases',
+    ),
+    HomeModel(
+      icon: IconConstants.kFoodServer,
+      title: "Food Server",
+      route: '/food_server',
+    ),
+    HomeModel(
+      icon: IconConstants.kSurvey,
+      title: "Survey",
+      route: '/food_survey',
     ),
   ];
 }

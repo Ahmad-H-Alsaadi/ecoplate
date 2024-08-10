@@ -17,14 +17,11 @@ class AuthView extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.active) {
           User? user = snapshot.data;
           if (user == null) {
-            // User is not logged in, show the login page
             return LoginOrRegisterView(navigationController: navigationController);
           } else {
-            // User is logged in, show the home view
             return HomeView(navigationController: navigationController);
           }
         } else {
-          // Still loading, show a loading indicator
           return const Scaffold(
             body: Center(
               child: CircularProgressIndicator(),

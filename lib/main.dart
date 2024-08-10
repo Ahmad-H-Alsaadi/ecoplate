@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ecoplate/app/authentication/controller/default_firebase_options.dart';
 import 'package:ecoplate/app/home/view/splash_view.dart';
 import 'package:ecoplate/core/controllers/locator.dart';
@@ -11,12 +10,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  try {
-    await FirebaseFirestore.instance.collection('test').doc('testDoc').set({'test': 'data'});
-    print('Test write to Firestore successful');
-  } catch (e) {
-    print('Test write to Firestore failed: $e');
-  }
+
   setupLocator();
   runApp(MyApp());
 }

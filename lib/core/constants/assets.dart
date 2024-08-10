@@ -12,7 +12,6 @@ class Assets {
   static const String kPurchases = 'assets/images/purchases.png';
   static const String kDetectWaste = 'assets/images/detect_waste.png';
   static const String kStock = 'assets/images/stock.png';
-  static const String kWallet = 'assets/images/wallet.png';
   static const String kQRScanner = 'assets/images/qr_scanner.png';
   static const String kCamera = 'assets/images/camera.png';
   static const String kSecurityCameras = 'assets/images/security_cameras.png';

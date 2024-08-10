@@ -19,7 +19,7 @@ class IconButtonWithTitle extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          Icon(icon, size: 50), // Icon size can be adjusted as needed
+          Icon(icon, size: 50),
           Text(title),
         ],
       ),
