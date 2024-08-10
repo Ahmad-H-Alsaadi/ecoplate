@@ -8,10 +8,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class DashboardController {
   final NavigationController navigationController;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore;
+  final FirebaseAuth _auth;
 
-  DashboardController(this.navigationController);
+  DashboardController(
+    this.navigationController, {
+    FirebaseFirestore? firestore,
+    FirebaseAuth? auth,
+  })  : _firestore = firestore ?? FirebaseFirestore.instance,
+        _auth = auth ?? FirebaseAuth.instance;
 
   void navigateTo(String routeName) {
     navigationController.navigateTo(routeName);
@@ -26,7 +31,9 @@ class DashboardController {
         .orderBy('timestamp', descending: true)
         .limit(10)
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => DetectFoodWasteModel.fromFirestore(doc)).toList());
+        .map((snapshot) => snapshot.docs
+            .map((doc) => DetectFoodWasteModel.fromFirestore(doc))
+            .toList());
   }
 
   Stream<List<StockModel>> getStockStream() {
@@ -36,13 +43,15 @@ class DashboardController {
         .doc(userId)
         .collection('stock')
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => StockModel.fromFirestore(doc)).toList());
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => StockModel.fromFirestore(doc)).toList());
   }
 
   Stream<double> getAverageFoodWaste() {
     return getFoodWasteStream().map((foodWasteList) {
       if (foodWasteList.isEmpty) return 0.0;
-      double sum = foodWasteList.fold(0, (sum, item) => sum + item.wastePercentage);
+      double sum =
+          foodWasteList.fold(0, (sum, item) => sum + item.wastePercentage);
       return sum / foodWasteList.length;
     });
   }
@@ -54,7 +63,9 @@ class DashboardController {
         .doc(userId)
         .collection('products')
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => ProductsModel.fromFirestore(doc)).toList());
+        .map((snapshot) => snapshot.docs
+            .map((doc) => ProductsModel.fromFirestore(doc))
+            .toList());
   }
 
   Stream<List<FoodSurveyModel>> getFoodSurveyStream() {
@@ -66,7 +77,9 @@ class DashboardController {
         .orderBy('timestamp', descending: true)
         .limit(5)
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => FoodSurveyModel.fromJson(doc.data())).toList());
+        .map((snapshot) => snapshot.docs
+            .map((doc) => FoodSurveyModel.fromJson(doc.data()))
+            .toList());
   }
 
   void navigateToFoodSurvey() {

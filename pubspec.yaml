@@ -54,6 +54,7 @@ dependencies:
     build_runner: ^2.4.11
     test: ^1.25.2
     firebase_core_platform_interface: ^5.2.0
+    firebase_auth_mocks: ^0.13.0
 
 flutter_launcher_icons:
     android: "launcher_icon"

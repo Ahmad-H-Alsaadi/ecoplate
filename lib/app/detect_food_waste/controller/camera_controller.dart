@@ -30,7 +30,8 @@ class CameraController {
   }
 
   Future<void> openGallery() async {
-    final XFile? selectedImage = await _picker.pickImage(source: ImageSource.gallery);
+    final XFile? selectedImage =
+        await _picker.pickImage(source: ImageSource.gallery);
     if (selectedImage != null) {
       image = File(selectedImage.path);
       await sendImageToServer();
@@ -54,7 +55,8 @@ class CameraController {
       if (response.statusCode == 200) {
         final result = jsonDecode(response.body);
         print("Raw server response: $result");
-        detectionResult = 'Food Waste: ${result['waste_percentage'].toStringAsFixed(2)}%';
+        detectionResult =
+            'Food Waste: ${result['waste_percentage'].toStringAsFixed(2)}%';
         boxes = List<Map<String, dynamic>>.from(result['detections']);
         print("Boxes: $boxes");
       } else {
@@ -85,14 +87,20 @@ class CameraController {
       throw Exception('No user logged in');
     }
 
-    productsStream = _firestore.collection('users').doc(user.uid).collection('products').snapshots().map((snapshot) {
+    productsStream = _firestore
+        .collection('users')
+        .doc(user.uid)
+        .collection('products')
+        .snapshots()
+        .map((snapshot) {
       return snapshot.docs.map((doc) {
         return ProductsModel.fromFirestore(doc);
       }).toList();
     });
   }
 
-  Future<void> saveProductWaste(ProductsModel product, double wastePercentage) async {
+  Future<void> saveProductWaste(
+      ProductsModel product, double wastePercentage) async {
     User? user = _auth.currentUser;
     if (user == null) {
       throw Exception('No user logged in');
@@ -116,7 +124,8 @@ class CameraController {
     }
   }
 
-  Future<void> saveAndReduceProductWaste(ProductsModel product, double wastePercentage) async {
+  Future<void> saveAndReduceProductWaste(
+      ProductsModel product, double wastePercentage) async {
     User? user = _auth.currentUser;
     if (user == null) {
       throw Exception('No user logged in');
@@ -150,10 +159,13 @@ class CameraController {
 
       DocumentSnapshot productDoc = productQuery.docs.first;
 
-      List<dynamic> currentRecipe = (productDoc.data() as Map<String, dynamic>)['recipe'] ?? [];
+      List<dynamic> currentRecipe =
+          (productDoc.data() as Map<String, dynamic>)['recipe'] ?? [];
 
-      List<Map<String, dynamic>> updatedRecipe = currentRecipe.map((recipeItem) {
-        Map<String, dynamic> typedRecipeItem = Map<String, dynamic>.from(recipeItem);
+      List<Map<String, dynamic>> updatedRecipe =
+          currentRecipe.map((recipeItem) {
+        Map<String, dynamic> typedRecipeItem =
+            Map<String, dynamic>.from(recipeItem);
         double currentAmount = typedRecipeItem['amount'] ?? 0.0;
         double reducedAmount = currentAmount * (1 - wastePercentage / 100);
         return {
@@ -162,7 +174,12 @@ class CameraController {
         };
       }).toList();
 
-      await _firestore.collection('users').doc(user.uid).collection('products').doc(productDoc.id).update({
+      await _firestore
+          .collection('users')
+          .doc(user.uid)
+          .collection('products')
+          .doc(productDoc.id)
+          .update({
         'recipe': updatedRecipe,
       });
     } catch (e) {
@@ -170,7 +187,8 @@ class CameraController {
       if (e is FirebaseException) {
         throw Exception('Firebase error: ${e.code} - ${e.message}');
       } else {
-        throw Exception('Failed to save and reduce product waste: ${e.toString()}');
+        throw Exception(
+            'Failed to save and reduce product waste: ${e.toString()}');
       }
     }
   }

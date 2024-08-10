@@ -12,11 +12,14 @@ import 'package:intl/intl.dart';
 
 class DashboardView extends StatelessWidget {
   final NavigationController navigationController;
-  late final DashboardController controller;
+  final DashboardController controller;
 
-  DashboardView({Key? key, required this.navigationController}) : super(key: key) {
-    controller = DashboardController(navigationController);
-  }
+  DashboardView(
+      {Key? key,
+      required this.navigationController,
+      DashboardController? controller})
+      : controller = controller ?? DashboardController(navigationController),
+        super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +64,8 @@ class DashboardView extends StatelessWidget {
               if (snapshot.hasData) {
                 return Text(
                   '${snapshot.data!.toStringAsFixed(2)}%',
-                  style: TextStyles.heading1.copyWith(color: ColorConstants.kAccentColor),
+                  style: TextStyles.heading1
+                      .copyWith(color: ColorConstants.kAccentColor),
                 );
               }
               return const CircularProgressIndicator();
@@ -78,7 +82,8 @@ class DashboardView extends StatelessWidget {
               if (snapshot.hasData) {
                 return Text(
                   '${snapshot.data}',
-                  style: TextStyles.heading1.copyWith(color: ColorConstants.kErrorColor),
+                  style: TextStyles.heading1
+                      .copyWith(color: ColorConstants.kErrorColor),
                 );
               }
               return const CircularProgressIndicator();
@@ -95,7 +100,8 @@ class DashboardView extends StatelessWidget {
               if (snapshot.hasData) {
                 return Text(
                   '${snapshot.data}',
-                  style: TextStyles.heading1.copyWith(color: ColorConstants.kPrimaryColor),
+                  style: TextStyles.heading1
+                      .copyWith(color: ColorConstants.kPrimaryColor),
                 );
               }
               return const CircularProgressIndicator();
@@ -108,8 +114,11 @@ class DashboardView extends StatelessWidget {
     );
   }
 
-  Widget _buildSummaryCard(String title, Widget content, IconData icon, BoxConstraints constraints) {
-    double cardWidth = constraints.maxWidth > 600 ? (constraints.maxWidth - Sizes.largeSize) / 3 : constraints.maxWidth;
+  Widget _buildSummaryCard(
+      String title, Widget content, IconData icon, BoxConstraints constraints) {
+    double cardWidth = constraints.maxWidth > 600
+        ? (constraints.maxWidth - Sizes.largeSize) / 3
+        : constraints.maxWidth;
     return Container(
       width: cardWidth,
       padding: Insets.mediumPadding,
@@ -124,7 +133,7 @@ class DashboardView extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(title, style: TextStyles.bodyText1),
+              Expanded(child: Text(title, style: TextStyles.bodyText1)),
               Icon(icon, color: ColorConstants.kPrimaryColor),
             ],
           ),
@@ -171,9 +180,11 @@ class DashboardView extends StatelessWidget {
                             showTitles: true,
                             reservedSize: 22,
                             getTitlesWidget: (value, meta) {
-                              if (value.toInt() >= 0 && value.toInt() < foodWasteData.length) {
+                              if (value.toInt() >= 0 &&
+                                  value.toInt() < foodWasteData.length) {
                                 return Text(
-                                  DateFormat('MM/dd').format(foodWasteData[value.toInt()].timestamp),
+                                  DateFormat('MM/dd').format(
+                                      foodWasteData[value.toInt()].timestamp),
                                   style: const TextStyle(fontSize: 10),
                                 );
                               }
@@ -182,12 +193,14 @@ class DashboardView extends StatelessWidget {
                           ),
                         ),
                         leftTitles: AxisTitles(
-                          axisNameWidget: const Text('Waste Percentage', style: TextStyle(fontSize: 12)),
+                          axisNameWidget: const Text('Waste Percentage',
+                              style: TextStyle(fontSize: 12)),
                           sideTitles: SideTitles(
                             showTitles: true,
                             reservedSize: 40,
                             getTitlesWidget: (value, meta) {
-                              return Text('${value.toInt()}%', style: const TextStyle(fontSize: 10));
+                              return Text('${value.toInt()}%',
+                                  style: const TextStyle(fontSize: 10));
                             },
                           ),
                         ),
@@ -200,7 +213,8 @@ class DashboardView extends StatelessWidget {
                       lineBarsData: [
                         LineChartBarData(
                           spots: foodWasteData.asMap().entries.map((entry) {
-                            return FlSpot(entry.key.toDouble(), entry.value.wastePercentage);
+                            return FlSpot(entry.key.toDouble(),
+                                entry.value.wastePercentage);
                           }).toList(),
                           isCurved: true,
                           curveSmoothness: 0.3,
@@ -208,7 +222,8 @@ class DashboardView extends StatelessWidget {
                           barWidth: 3,
                           isStrokeCapRound: true,
                           dotData: const FlDotData(show: true),
-                          belowBarData: BarAreaData(show: true, color: Colors.blue.withOpacity(0.1)),
+                          belowBarData: BarAreaData(
+                              show: true, color: Colors.blue.withOpacity(0.1)),
                         ),
                       ],
                     ),
@@ -226,7 +241,8 @@ class DashboardView extends StatelessWidget {
               builder: (context, snapshot) {
                 if (!snapshot.hasData) return const CircularProgressIndicator();
                 int totalItems = snapshot.data!.length;
-                int lowStockItems = snapshot.data!.where((item) => item.amount < 10).length;
+                int lowStockItems =
+                    snapshot.data!.where((item) => item.amount < 10).length;
                 return PieChart(
                   PieChartData(
                     sections: [
@@ -235,14 +251,16 @@ class DashboardView extends StatelessWidget {
                         value: (totalItems - lowStockItems).toDouble(),
                         title: 'Normal',
                         radius: 100,
-                        titleStyle: TextStyles.bodyText2.copyWith(color: ColorConstants.kWhite),
+                        titleStyle: TextStyles.bodyText2
+                            .copyWith(color: ColorConstants.kWhite),
                       ),
                       PieChartSectionData(
                         color: ColorConstants.kErrorColor,
                         value: lowStockItems.toDouble(),
                         title: 'Low',
                         radius: 110,
-                        titleStyle: TextStyles.bodyText2.copyWith(color: ColorConstants.kWhite),
+                        titleStyle: TextStyles.bodyText2
+                            .copyWith(color: ColorConstants.kWhite),
                       ),
                     ],
                     sectionsSpace: 2,
@@ -273,8 +291,12 @@ class DashboardView extends StatelessWidget {
                 children: snapshot.data!.take(5).map((waste) {
                   return ListTile(
                     title: Text(waste.productName, style: TextStyles.bodyText1),
-                    subtitle: Text('Waste: ${waste.wastePercentage.toStringAsFixed(2)}%', style: TextStyles.bodyText2),
-                    trailing: Text(DateFormat('MM/dd/yyyy').format(waste.timestamp), style: TextStyles.bodyText2),
+                    subtitle: Text(
+                        'Waste: ${waste.wastePercentage.toStringAsFixed(2)}%',
+                        style: TextStyles.bodyText2),
+                    trailing: Text(
+                        DateFormat('MM/dd/yyyy').format(waste.timestamp),
+                        style: TextStyles.bodyText2),
                   );
                 }).toList(),
               );
@@ -288,13 +310,17 @@ class DashboardView extends StatelessWidget {
             stream: controller.getStockStream(),
             builder: (context, snapshot) {
               if (!snapshot.hasData) return const CircularProgressIndicator();
-              final lowStockItems = snapshot.data!.where((item) => item.amount < 10).toList();
+              final lowStockItems =
+                  snapshot.data!.where((item) => item.amount < 10).toList();
               return Column(
                 children: lowStockItems.take(5).map((item) {
                   return ListTile(
-                    title: Text(item.item.itemName, style: TextStyles.bodyText1),
-                    subtitle: Text('Amount: ${item.amount}', style: TextStyles.bodyText2),
-                    trailing: Text('Expires: ${DateFormat('MM/dd/yyyy').format(item.expireDate)}',
+                    title:
+                        Text(item.item.itemName, style: TextStyles.bodyText1),
+                    subtitle: Text('Amount: ${item.amount}',
+                        style: TextStyles.bodyText2),
+                    trailing: Text(
+                        'Expires: ${DateFormat('MM/dd/yyyy').format(item.expireDate)}',
                         style: TextStyles.bodyText2),
                   );
                 }).toList(),
@@ -310,7 +336,8 @@ class DashboardView extends StatelessWidget {
   Widget _buildQuickActions(BuildContext context) {
     return Card(
       elevation: 4,
-      shape: const RoundedRectangleBorder(borderRadius: Borders.mediumBorderRadius),
+      shape: const RoundedRectangleBorder(
+          borderRadius: Borders.mediumBorderRadius),
       child: Padding(
         padding: Insets.mediumPadding,
         child: Column(
@@ -322,10 +349,14 @@ class DashboardView extends StatelessWidget {
               spacing: Sizes.mediumSize,
               runSpacing: Sizes.mediumSize,
               children: [
-                _buildActionButton('Add Food Waste', Icons.camera_alt, () => controller.navigateTo('/camera')),
-                _buildActionButton('Add Purchase', Icons.receipt_long, () => controller.navigateTo('/purchases')),
-                _buildActionButton('Update Stock', Icons.inventory, () => controller.navigateTo('/stock')),
-                _buildActionButton('Food Survey', Icons.poll, () => controller.navigateToFoodSurvey()),
+                _buildActionButton('Add Food Waste', Icons.camera_alt,
+                    () => controller.navigateTo('/camera')),
+                _buildActionButton('Add Purchase', Icons.receipt_long,
+                    () => controller.navigateTo('/purchases')),
+                _buildActionButton('Update Stock', Icons.inventory,
+                    () => controller.navigateTo('/stock')),
+                _buildActionButton('Food Survey', Icons.poll,
+                    () => controller.navigateToFoodSurvey()),
               ],
             ),
           ],
@@ -335,8 +366,9 @@ class DashboardView extends StatelessWidget {
   }
 
   Widget _buildCard(String title, Widget content, BoxConstraints constraints) {
-    double cardWidth =
-        constraints.maxWidth > 600 ? (constraints.maxWidth - Sizes.mediumSize) / 2 : constraints.maxWidth;
+    double cardWidth = constraints.maxWidth > 600
+        ? (constraints.maxWidth - Sizes.mediumSize) / 2
+        : constraints.maxWidth;
     return Container(
       width: cardWidth,
       padding: Insets.mediumPadding,
@@ -356,7 +388,8 @@ class DashboardView extends StatelessWidget {
     );
   }
 
-  Widget _buildActionButton(String text, IconData icon, VoidCallback onPressed) {
+  Widget _buildActionButton(
+      String text, IconData icon, VoidCallback onPressed) {
     return ElevatedButton.icon(
       onPressed: onPressed,
       icon: Icon(icon, color: ColorConstants.kWhite),
@@ -364,7 +397,8 @@ class DashboardView extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         backgroundColor: ColorConstants.kPrimaryColor,
         padding: Insets.symmetricPadding,
-        shape: const RoundedRectangleBorder(borderRadius: Borders.smallBorderRadius),
+        shape: const RoundedRectangleBorder(
+            borderRadius: Borders.smallBorderRadius),
       ),
     );
   }
